@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LibriKeep.Core.Application/LibriKeep.Core.Application.csproj" />
+    <Project Path="src/LibriKeep.Core.Domain/LibriKeep.Core.Domain.csproj" />
+    <Project Path="src/LibriKeep.Infrastructure.Persistence/LibriKeep.Infrastructure.Persistence.csproj" />
+    <Project Path="src/LibriKeep.Presentation.API/LibriKeep.Presentation.API.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LibriKeep.Core.Application.Tests/LibriKeep.Core.Application.Tests.csproj" />
+    <Project Path="tests/LibriKeep.IntegrationTests/LibriKeep.IntegrationTests.csproj" />
+  </Folder>
+</Solution>

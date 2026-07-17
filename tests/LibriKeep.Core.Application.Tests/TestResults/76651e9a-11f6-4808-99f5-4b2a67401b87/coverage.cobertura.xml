@@ -1,0 +1,1984 @@
+<?xml version="1.0" encoding="utf-8"?>
+<coverage line-rate="0.6686" branch-rate="0.5813" version="1.9" timestamp="1784244893" lines-covered="331" lines-valid="495" branches-covered="50" branches-valid="86">
+  <sources>
+    <source>X:\LibriKeepProject\src\</source>
+  </sources>
+  <packages>
+    <package name="LibriKeep.Core.Application" line-rate="0.7803" branch-rate="0.6175999999999999" complexity="52">
+      <classes>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo.RegistrarPrestamoCommand" filename="LibriKeep.Core.Application\Circulacion\Commands\RegistrarPrestamo\RegistrarPrestamoCommand.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_UsuarioId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="17" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="11" hits="17" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo.RegistrarPrestamoCommandHandler" filename="LibriKeep.Core.Application\Circulacion\Commands\RegistrarPrestamo\RegistrarPrestamoCommand.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(LibriKeep.Core.Application.Common.Interfaces.IUsuarioRepository,LibriKeep.Core.Application.Common.Interfaces.IEjemplarRepository,LibriKeep.Core.Application.Common.Interfaces.IPrestamoRepository,LibriKeep.Core.Application.Common.Interfaces.IUnitOfWork)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="20" hits="4" branch="False" />
+                <line number="21" hits="4" branch="False" />
+                <line number="22" hits="4" branch="False" />
+                <line number="23" hits="4" branch="False" />
+                <line number="24" hits="4" branch="False" />
+                <line number="25" hits="4" branch="False" />
+                <line number="26" hits="4" branch="False" />
+                <line number="27" hits="4" branch="False" />
+                <line number="28" hits="4" branch="False" />
+                <line number="29" hits="4" branch="False" />
+                <line number="30" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="20" hits="4" branch="False" />
+            <line number="21" hits="4" branch="False" />
+            <line number="22" hits="4" branch="False" />
+            <line number="23" hits="4" branch="False" />
+            <line number="24" hits="4" branch="False" />
+            <line number="25" hits="4" branch="False" />
+            <line number="26" hits="4" branch="False" />
+            <line number="27" hits="4" branch="False" />
+            <line number="28" hits="4" branch="False" />
+            <line number="29" hits="4" branch="False" />
+            <line number="30" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo.RegistrarPrestamoCommandHandler/&lt;Handle&gt;d__5" filename="LibriKeep.Core.Application\Circulacion\Commands\RegistrarPrestamo\RegistrarPrestamoCommand.cs" line-rate="0.7741" branch-rate="0.5" complexity="8">
+          <methods>
+            <method name="MoveNext" signature="()" line-rate="0.7741" branch-rate="0.5" complexity="8">
+              <lines>
+                <line number="33" hits="4" branch="False" />
+                <line number="34" hits="4" branch="False" />
+                <line number="37" hits="4" branch="False" />
+                <line number="38" hits="4" branch="False" />
+                <line number="39" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="415" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="40" hits="0" branch="False" />
+                <line number="41" hits="0" branch="False" />
+                <line number="42" hits="0" branch="False" />
+                <line number="44" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="594" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="45" hits="0" branch="False" />
+                <line number="46" hits="0" branch="False" />
+                <line number="49" hits="4" branch="False" />
+                <line number="50" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="833" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="51" hits="0" branch="False" />
+                <line number="52" hits="0" branch="False" />
+                <line number="57" hits="4" branch="False" />
+                <line number="60" hits="4" branch="False" />
+                <line number="61" hits="3" branch="False" />
+                <line number="64" hits="2" branch="False" />
+                <line number="67" hits="1" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="1114" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="68" hits="1" branch="False" />
+                <line number="69" hits="1" branch="False" />
+                <line number="70" hits="1" branch="False" />
+                <line number="72" hits="1" branch="False" />
+                <line number="73" hits="1" branch="False" />
+                <line number="75" hits="1" branch="False" />
+                <line number="77" hits="3" branch="False" />
+                <line number="78" hits="3" branch="False" />
+                <line number="79" hits="3" branch="False" />
+                <line number="80" hits="3" branch="False" />
+                <line number="82" hits="1" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="33" hits="4" branch="False" />
+            <line number="34" hits="4" branch="False" />
+            <line number="37" hits="4" branch="False" />
+            <line number="38" hits="4" branch="False" />
+            <line number="39" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="415" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="40" hits="0" branch="False" />
+            <line number="41" hits="0" branch="False" />
+            <line number="42" hits="0" branch="False" />
+            <line number="44" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="594" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="45" hits="0" branch="False" />
+            <line number="46" hits="0" branch="False" />
+            <line number="49" hits="4" branch="False" />
+            <line number="50" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="833" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="51" hits="0" branch="False" />
+            <line number="52" hits="0" branch="False" />
+            <line number="57" hits="4" branch="False" />
+            <line number="60" hits="4" branch="False" />
+            <line number="61" hits="3" branch="False" />
+            <line number="64" hits="2" branch="False" />
+            <line number="67" hits="1" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="1114" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="68" hits="1" branch="False" />
+            <line number="69" hits="1" branch="False" />
+            <line number="70" hits="1" branch="False" />
+            <line number="72" hits="1" branch="False" />
+            <line number="73" hits="1" branch="False" />
+            <line number="75" hits="1" branch="False" />
+            <line number="77" hits="3" branch="False" />
+            <line number="78" hits="3" branch="False" />
+            <line number="79" hits="3" branch="False" />
+            <line number="80" hits="3" branch="False" />
+            <line number="82" hits="1" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.ProcesarDevolucion.DevolucionResult" filename="LibriKeep.Core.Application\Circulacion\Commands\ProcesarDevolucion\ProcesarDevolucionCommand.cs" line-rate="0.875" branch-rate="1" complexity="7">
+          <methods>
+            <method name="get_PrestamoId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaDevolucionEfectiva" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_DiasRetraso" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PenalizacionAplicada" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Sancion" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_NuevoEstadoEjemplar" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.DateTime,System.Int32,System.Boolean,LibriKeep.Core.Domain.Entities.Sancion,LibriKeep.Core.Domain.Enums.EstadoEjemplar)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="3" branch="False" />
+                <line number="19" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="13" hits="1" branch="False" />
+            <line number="14" hits="0" branch="False" />
+            <line number="15" hits="2" branch="False" />
+            <line number="16" hits="2" branch="False" />
+            <line number="17" hits="3" branch="False" />
+            <line number="18" hits="1" branch="False" />
+            <line number="12" hits="3" branch="False" />
+            <line number="19" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.ProcesarDevolucion.ProcesarDevolucionCommand" filename="LibriKeep.Core.Application\Circulacion\Commands\ProcesarDevolucion\ProcesarDevolucionCommand.cs" line-rate="0.8" branch-rate="1" complexity="4">
+          <methods>
+            <method name="get_CodigoBarras" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_EstadoEntrega" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="23" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Observaciones" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="24" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,LibriKeep.Core.Domain.Enums.EstadoEjemplar,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="3" branch="False" />
+                <line number="25" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="22" hits="3" branch="False" />
+            <line number="23" hits="3" branch="False" />
+            <line number="24" hits="0" branch="False" />
+            <line number="21" hits="3" branch="False" />
+            <line number="25" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.ProcesarDevolucion.ProcesarDevolucionCommandHandler" filename="LibriKeep.Core.Application\Circulacion\Commands\ProcesarDevolucion\ProcesarDevolucionCommand.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(LibriKeep.Core.Application.Common.Interfaces.IPrestamoRepository,LibriKeep.Core.Application.Common.Interfaces.IReservaRepository,LibriKeep.Core.Application.Common.Interfaces.ISancionRepository,LibriKeep.Core.Application.Common.Interfaces.IUnitOfWork)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="34" hits="3" branch="False" />
+                <line number="35" hits="3" branch="False" />
+                <line number="36" hits="3" branch="False" />
+                <line number="37" hits="3" branch="False" />
+                <line number="38" hits="3" branch="False" />
+                <line number="39" hits="3" branch="False" />
+                <line number="40" hits="3" branch="False" />
+                <line number="41" hits="3" branch="False" />
+                <line number="42" hits="3" branch="False" />
+                <line number="43" hits="3" branch="False" />
+                <line number="44" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="34" hits="3" branch="False" />
+            <line number="35" hits="3" branch="False" />
+            <line number="36" hits="3" branch="False" />
+            <line number="37" hits="3" branch="False" />
+            <line number="38" hits="3" branch="False" />
+            <line number="39" hits="3" branch="False" />
+            <line number="40" hits="3" branch="False" />
+            <line number="41" hits="3" branch="False" />
+            <line number="42" hits="3" branch="False" />
+            <line number="43" hits="3" branch="False" />
+            <line number="44" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.ProcesarDevolucion.ProcesarDevolucionCommandHandler/&lt;Handle&gt;d__5" filename="LibriKeep.Core.Application\Circulacion\Commands\ProcesarDevolucion\ProcesarDevolucionCommand.cs" line-rate="0.6153" branch-rate="0.65" complexity="20">
+          <methods>
+            <method name="MoveNext" signature="()" line-rate="0.6153" branch-rate="0.65" complexity="20">
+              <lines>
+                <line number="47" hits="3" branch="False" />
+                <line number="48" hits="3" branch="False" />
+                <line number="51" hits="3" branch="False" />
+                <line number="53" hits="3" branch="False" />
+                <line number="54" hits="3" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="414" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="55" hits="0" branch="False" />
+                <line number="56" hits="0" branch="False" />
+                <line number="57" hits="0" branch="False" />
+                <line number="61" hits="3" branch="False" />
+                <line number="62" hits="3" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="484" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="63" hits="0" branch="False" />
+                <line number="64" hits="0" branch="False" />
+                <line number="67" hits="3" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="521" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="68" hits="0" branch="False" />
+                <line number="69" hits="0" branch="False" />
+                <line number="72" hits="3" branch="False" />
+                <line number="75" hits="3" branch="False" />
+                <line number="78" hits="3" branch="False" />
+                <line number="79" hits="3" branch="False" />
+                <line number="81" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="759" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="82" hits="1" branch="False" />
+                <line number="83" hits="1" branch="False" />
+                <line number="84" hits="1" branch="False" />
+                <line number="87" hits="3" branch="True" condition-coverage="100% (4/4)">
+                  <conditions>
+                    <condition number="890" type="jump" coverage="100%" />
+                    <condition number="913" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="88" hits="1" branch="False" />
+                <line number="89" hits="1" branch="False" />
+                <line number="90" hits="1" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="1077" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="91" hits="1" branch="False" />
+                <line number="92" hits="1" branch="False" />
+                <line number="93" hits="1" branch="False" />
+                <line number="94" hits="1" branch="False" />
+                <line number="96" hits="3" branch="False" />
+                <line number="97" hits="3" branch="False" />
+                <line number="99" hits="3" branch="False" />
+                <line number="100" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="1378" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="101" hits="1" branch="False" />
+                <line number="102" hits="1" branch="False" />
+                <line number="103" hits="1" branch="False" />
+                <line number="105" hits="3" branch="False" />
+                <line number="106" hits="3" branch="False" />
+                <line number="107" hits="3" branch="False" />
+                <line number="108" hits="3" branch="False" />
+                <line number="109" hits="3" branch="False" />
+                <line number="110" hits="3" branch="False" />
+                <line number="111" hits="3" branch="False" />
+                <line number="112" hits="3" branch="False" />
+                <line number="114" hits="0" branch="False" />
+                <line number="115" hits="0" branch="False" />
+                <line number="116" hits="0" branch="False" />
+                <line number="117" hits="0" branch="False" />
+                <line number="119" hits="0" branch="False" />
+                <line number="120" hits="0" branch="False" />
+                <line number="121" hits="0" branch="False" />
+                <line number="123" hits="0" branch="False" />
+                <line number="124" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="1893" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="125" hits="0" branch="False" />
+                <line number="126" hits="0" branch="False" />
+                <line number="127" hits="0" branch="False" />
+                <line number="129" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="1932" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="130" hits="0" branch="False" />
+                <line number="131" hits="0" branch="False" />
+                <line number="132" hits="0" branch="False" />
+                <line number="135" hits="0" branch="False" />
+                <line number="136" hits="0" branch="False" />
+                <line number="138" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="47" hits="3" branch="False" />
+            <line number="48" hits="3" branch="False" />
+            <line number="51" hits="3" branch="False" />
+            <line number="53" hits="3" branch="False" />
+            <line number="54" hits="3" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="414" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="55" hits="0" branch="False" />
+            <line number="56" hits="0" branch="False" />
+            <line number="57" hits="0" branch="False" />
+            <line number="61" hits="3" branch="False" />
+            <line number="62" hits="3" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="484" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="63" hits="0" branch="False" />
+            <line number="64" hits="0" branch="False" />
+            <line number="67" hits="3" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="521" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="68" hits="0" branch="False" />
+            <line number="69" hits="0" branch="False" />
+            <line number="72" hits="3" branch="False" />
+            <line number="75" hits="3" branch="False" />
+            <line number="78" hits="3" branch="False" />
+            <line number="79" hits="3" branch="False" />
+            <line number="81" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="759" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="82" hits="1" branch="False" />
+            <line number="83" hits="1" branch="False" />
+            <line number="84" hits="1" branch="False" />
+            <line number="87" hits="3" branch="True" condition-coverage="100% (4/4)">
+              <conditions>
+                <condition number="890" type="jump" coverage="100%" />
+                <condition number="913" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="88" hits="1" branch="False" />
+            <line number="89" hits="1" branch="False" />
+            <line number="90" hits="1" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="1077" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="91" hits="1" branch="False" />
+            <line number="92" hits="1" branch="False" />
+            <line number="93" hits="1" branch="False" />
+            <line number="94" hits="1" branch="False" />
+            <line number="96" hits="3" branch="False" />
+            <line number="97" hits="3" branch="False" />
+            <line number="99" hits="3" branch="False" />
+            <line number="100" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="1378" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="101" hits="1" branch="False" />
+            <line number="102" hits="1" branch="False" />
+            <line number="103" hits="1" branch="False" />
+            <line number="105" hits="3" branch="False" />
+            <line number="106" hits="3" branch="False" />
+            <line number="107" hits="3" branch="False" />
+            <line number="108" hits="3" branch="False" />
+            <line number="109" hits="3" branch="False" />
+            <line number="110" hits="3" branch="False" />
+            <line number="111" hits="3" branch="False" />
+            <line number="112" hits="3" branch="False" />
+            <line number="114" hits="0" branch="False" />
+            <line number="115" hits="0" branch="False" />
+            <line number="116" hits="0" branch="False" />
+            <line number="117" hits="0" branch="False" />
+            <line number="119" hits="0" branch="False" />
+            <line number="120" hits="0" branch="False" />
+            <line number="121" hits="0" branch="False" />
+            <line number="123" hits="0" branch="False" />
+            <line number="124" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="1893" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="125" hits="0" branch="False" />
+            <line number="126" hits="0" branch="False" />
+            <line number="127" hits="0" branch="False" />
+            <line number="129" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="1932" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="130" hits="0" branch="False" />
+            <line number="131" hits="0" branch="False" />
+            <line number="132" hits="0" branch="False" />
+            <line number="135" hits="0" branch="False" />
+            <line number="136" hits="0" branch="False" />
+            <line number="138" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.CrearReserva.CrearReservaCommand" filename="LibriKeep.Core.Application\Circulacion\Commands\CrearReserva\CrearReservaCommand.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name="get_UsuarioId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="9" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="13" hits="9" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.CrearReserva.CrearReservaCommandHandler" filename="LibriKeep.Core.Application\Circulacion\Commands\CrearReserva\CrearReservaCommand.cs" line-rate="1" branch-rate="1" complexity="1">
+          <methods>
+            <method name=".ctor" signature="(LibriKeep.Core.Application.Common.Interfaces.IUsuarioRepository,LibriKeep.Core.Application.Common.Interfaces.ILibroRepository,LibriKeep.Core.Application.Common.Interfaces.IReservaRepository,LibriKeep.Core.Application.Common.Interfaces.IUnitOfWork)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="3" branch="False" />
+                <line number="23" hits="3" branch="False" />
+                <line number="24" hits="3" branch="False" />
+                <line number="25" hits="3" branch="False" />
+                <line number="26" hits="3" branch="False" />
+                <line number="27" hits="3" branch="False" />
+                <line number="28" hits="3" branch="False" />
+                <line number="29" hits="3" branch="False" />
+                <line number="30" hits="3" branch="False" />
+                <line number="31" hits="3" branch="False" />
+                <line number="32" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="22" hits="3" branch="False" />
+            <line number="23" hits="3" branch="False" />
+            <line number="24" hits="3" branch="False" />
+            <line number="25" hits="3" branch="False" />
+            <line number="26" hits="3" branch="False" />
+            <line number="27" hits="3" branch="False" />
+            <line number="28" hits="3" branch="False" />
+            <line number="29" hits="3" branch="False" />
+            <line number="30" hits="3" branch="False" />
+            <line number="31" hits="3" branch="False" />
+            <line number="32" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.CrearReserva.CrearReservaCommandHandler/&lt;&gt;c" filename="LibriKeep.Core.Application\Circulacion\Commands\CrearReserva\CrearReservaCommand.cs" line-rate="1" branch-rate="1" complexity="2">
+          <methods>
+            <method name="&lt;Handle&gt;b__5_0" signature="(LibriKeep.Core.Domain.Entities.Ejemplar)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="57" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="&lt;Handle&gt;b__5_1" signature="(LibriKeep.Core.Domain.Entities.Reserva)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="67" hits="1" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="57" hits="4" branch="False" />
+            <line number="67" hits="1" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Application.Circulacion.Commands.CrearReserva.CrearReservaCommandHandler/&lt;Handle&gt;d__5" filename="LibriKeep.Core.Application\Circulacion\Commands\CrearReserva\CrearReservaCommand.cs" line-rate="0.8518000000000001" branch-rate="0.6666" complexity="6">
+          <methods>
+            <method name="MoveNext" signature="()" line-rate="0.8518000000000001" branch-rate="0.6666" complexity="6">
+              <lines>
+                <line number="35" hits="3" branch="False" />
+                <line number="36" hits="3" branch="False" />
+                <line number="39" hits="3" branch="False" />
+                <line number="40" hits="3" branch="False" />
+                <line number="41" hits="3" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="389" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="42" hits="0" branch="False" />
+                <line number="43" hits="0" branch="False" />
+                <line number="46" hits="3" branch="False" />
+                <line number="47" hits="3" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="628" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="48" hits="0" branch="False" />
+                <line number="49" hits="0" branch="False" />
+                <line number="53" hits="3" branch="False" />
+                <line number="58" hits="2" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="784" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="59" hits="1" branch="False" />
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="68" hits="1" branch="False" />
+                <line number="70" hits="1" branch="False" />
+                <line number="71" hits="1" branch="False" />
+                <line number="73" hits="1" branch="False" />
+                <line number="74" hits="1" branch="False" />
+                <line number="76" hits="1" branch="False" />
+                <line number="78" hits="2" branch="False" />
+                <line number="79" hits="2" branch="False" />
+                <line number="80" hits="2" branch="False" />
+                <line number="81" hits="2" branch="False" />
+                <line number="83" hits="1" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="35" hits="3" branch="False" />
+            <line number="36" hits="3" branch="False" />
+            <line number="39" hits="3" branch="False" />
+            <line number="40" hits="3" branch="False" />
+            <line number="41" hits="3" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="389" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="42" hits="0" branch="False" />
+            <line number="43" hits="0" branch="False" />
+            <line number="46" hits="3" branch="False" />
+            <line number="47" hits="3" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="628" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="48" hits="0" branch="False" />
+            <line number="49" hits="0" branch="False" />
+            <line number="53" hits="3" branch="False" />
+            <line number="58" hits="2" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="784" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="59" hits="1" branch="False" />
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="68" hits="1" branch="False" />
+            <line number="70" hits="1" branch="False" />
+            <line number="71" hits="1" branch="False" />
+            <line number="73" hits="1" branch="False" />
+            <line number="74" hits="1" branch="False" />
+            <line number="76" hits="1" branch="False" />
+            <line number="78" hits="2" branch="False" />
+            <line number="79" hits="2" branch="False" />
+            <line number="80" hits="2" branch="False" />
+            <line number="81" hits="2" branch="False" />
+            <line number="83" hits="1" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+    <package name="LibriKeep.Core.Domain" line-rate="0.6086" branch-rate="0.5576" complexity="158">
+      <classes>
+        <class name="LibriKeep.Core.Domain.Exceptions.DomainException" filename="LibriKeep.Core.Domain\Exceptions\DomainException.cs" line-rate="1" branch-rate="1" complexity="2">
+          <methods>
+            <method name="get_ErrorCode" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="5" branch="False" />
+                <line number="10" hits="5" branch="False" />
+                <line number="11" hits="5" branch="False" />
+                <line number="12" hits="5" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="5" branch="False" />
+            <line number="9" hits="5" branch="False" />
+            <line number="10" hits="5" branch="False" />
+            <line number="11" hits="5" branch="False" />
+            <line number="12" hits="5" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Autor" filename="LibriKeep.Core.Domain\Entities\Autor.cs" line-rate="0" branch-rate="1" complexity="7">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Nombre" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Nacionalidad" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Libros" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="24" hits="0" branch="False" />
+                <line number="25" hits="0" branch="False" />
+                <line number="26" hits="0" branch="False" />
+                <line number="27" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="0" branch="False" />
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="0" branch="False" />
+            <line number="10" hits="0" branch="False" />
+            <line number="24" hits="0" branch="False" />
+            <line number="25" hits="0" branch="False" />
+            <line number="26" hits="0" branch="False" />
+            <line number="27" hits="0" branch="False" />
+            <line number="14" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Categoria" filename="LibriKeep.Core.Domain\Entities\Categoria.cs" line-rate="0" branch-rate="1" complexity="7">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Nombre" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Descripcion" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Libros" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="24" hits="0" branch="False" />
+                <line number="25" hits="0" branch="False" />
+                <line number="26" hits="0" branch="False" />
+                <line number="27" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+                <line number="20" hits="0" branch="False" />
+                <line number="21" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="0" branch="False" />
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="0" branch="False" />
+            <line number="10" hits="0" branch="False" />
+            <line number="24" hits="0" branch="False" />
+            <line number="25" hits="0" branch="False" />
+            <line number="26" hits="0" branch="False" />
+            <line number="27" hits="0" branch="False" />
+            <line number="14" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+            <line number="20" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Editorial" filename="LibriKeep.Core.Domain\Entities\Editorial.cs" line-rate="0" branch-rate="1" complexity="6">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="7" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Nombre" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Libros" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="0" branch="False" />
+                <line number="23" hits="0" branch="False" />
+                <line number="24" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="0" branch="False" />
+                <line number="17" hits="0" branch="False" />
+                <line number="18" hits="0" branch="False" />
+                <line number="19" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="7" hits="0" branch="False" />
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="23" hits="0" branch="False" />
+            <line number="24" hits="0" branch="False" />
+            <line number="13" hits="0" branch="False" />
+            <line number="16" hits="0" branch="False" />
+            <line number="17" hits="0" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="19" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Ejemplar" filename="LibriKeep.Core.Domain\Entities\Ejemplar.cs" line-rate="0.7804000000000001" branch-rate="0.75" complexity="18">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="8" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LibroId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="25" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Libro" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="13" branch="False" />
+              </lines>
+            </method>
+            <method name="get_CodigoBarras" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="14" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Estado" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="40" branch="False" />
+              </lines>
+            </method>
+            <method name="get_UbicacionFisica" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="13" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Observaciones" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="13" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(LibriKeep.Core.Domain.Enums.EstadoEjemplar,System.String,System.String)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="31" hits="0" branch="False" />
+                <line number="32" hits="0" branch="False" />
+                <line number="33" hits="0" branch="False" />
+                <line number="34" hits="0" branch="False" />
+                <line number="35" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Prestar" signature="()" line-rate="1" branch-rate="1" complexity="2">
+              <lines>
+                <line number="38" hits="8" branch="False" />
+                <line number="40" hits="8" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="12" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="41" hits="1" branch="False" />
+                <line number="42" hits="1" branch="False" />
+                <line number="43" hits="1" branch="False" />
+                <line number="46" hits="7" branch="False" />
+                <line number="47" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="Devolver" signature="(System.Boolean,LibriKeep.Core.Domain.Enums.EstadoEjemplar)" line-rate="0.7692" branch-rate="0.6666" complexity="6">
+              <lines>
+                <line number="50" hits="3" branch="False" />
+                <line number="52" hits="3" branch="True" condition-coverage="50% (2/4)">
+                  <conditions>
+                    <condition number="3" type="jump" coverage="50%" />
+                    <condition number="14" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="53" hits="0" branch="False" />
+                <line number="54" hits="0" branch="False" />
+                <line number="55" hits="0" branch="False" />
+                <line number="59" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="30" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="62" hits="1" branch="False" />
+                <line number="64" hits="2" branch="False" />
+                <line number="65" hits="2" branch="False" />
+                <line number="66" hits="2" branch="False" />
+                <line number="67" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.String,System.String,System.String)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="13" branch="False" />
+                <line number="22" hits="13" branch="False" />
+                <line number="23" hits="13" branch="False" />
+                <line number="24" hits="13" branch="False" />
+                <line number="25" hits="13" branch="False" />
+                <line number="26" hits="13" branch="False" />
+                <line number="27" hits="13" branch="False" />
+                <line number="28" hits="13" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="8" branch="False" />
+            <line number="9" hits="25" branch="False" />
+            <line number="10" hits="13" branch="False" />
+            <line number="11" hits="14" branch="False" />
+            <line number="12" hits="40" branch="False" />
+            <line number="13" hits="13" branch="False" />
+            <line number="14" hits="13" branch="False" />
+            <line number="31" hits="0" branch="False" />
+            <line number="32" hits="0" branch="False" />
+            <line number="33" hits="0" branch="False" />
+            <line number="34" hits="0" branch="False" />
+            <line number="35" hits="0" branch="False" />
+            <line number="38" hits="8" branch="False" />
+            <line number="40" hits="8" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="12" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="41" hits="1" branch="False" />
+            <line number="42" hits="1" branch="False" />
+            <line number="43" hits="1" branch="False" />
+            <line number="46" hits="7" branch="False" />
+            <line number="47" hits="7" branch="False" />
+            <line number="50" hits="3" branch="False" />
+            <line number="52" hits="3" branch="True" condition-coverage="50% (2/4)">
+              <conditions>
+                <condition number="3" type="jump" coverage="50%" />
+                <condition number="14" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="53" hits="0" branch="False" />
+            <line number="54" hits="0" branch="False" />
+            <line number="55" hits="0" branch="False" />
+            <line number="59" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="30" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="62" hits="1" branch="False" />
+            <line number="64" hits="2" branch="False" />
+            <line number="65" hits="2" branch="False" />
+            <line number="66" hits="2" branch="False" />
+            <line number="67" hits="3" branch="False" />
+            <line number="18" hits="0" branch="False" />
+            <line number="21" hits="13" branch="False" />
+            <line number="22" hits="13" branch="False" />
+            <line number="23" hits="13" branch="False" />
+            <line number="24" hits="13" branch="False" />
+            <line number="25" hits="13" branch="False" />
+            <line number="26" hits="13" branch="False" />
+            <line number="27" hits="13" branch="False" />
+            <line number="28" hits="13" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Libro" filename="LibriKeep.Core.Domain\Entities\Libro.cs" line-rate="0.66" branch-rate="0.5" complexity="24">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Titulo" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Isbn" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_AutorId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Autor" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_CategoriaId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Categoria" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_EditorialId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="20" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Editorial" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaPublicacion" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="23" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Idioma" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="24" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Pais" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="25" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_TipoMaterial" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="26" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Ejemplares" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="28" hits="9" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Reservas" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="29" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(System.String,System.String,System.Int32,System.Int32,System.Int32,System.DateTime,System.String,System.String,LibriKeep.Core.Domain.Enums.TipoMaterial)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="52" hits="0" branch="False" />
+                <line number="53" hits="0" branch="False" />
+                <line number="55" hits="0" branch="False" />
+                <line number="56" hits="0" branch="False" />
+                <line number="57" hits="0" branch="False" />
+                <line number="58" hits="0" branch="False" />
+                <line number="59" hits="0" branch="False" />
+                <line number="60" hits="0" branch="False" />
+                <line number="61" hits="0" branch="False" />
+                <line number="62" hits="0" branch="False" />
+                <line number="63" hits="0" branch="False" />
+                <line number="64" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidarIsbn" signature="(System.String)" line-rate="0.5555" branch-rate="0.5" complexity="6">
+              <lines>
+                <line number="67" hits="4" branch="False" />
+                <line number="68" hits="4" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="9" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="69" hits="0" branch="False" />
+                <line number="70" hits="0" branch="False" />
+                <line number="74" hits="4" branch="False" />
+                <line number="75" hits="4" branch="True" condition-coverage="50% (2/4)">
+                  <conditions>
+                    <condition number="68" type="jump" coverage="50%" />
+                    <condition number="88" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="76" hits="0" branch="False" />
+                <line number="77" hits="0" branch="False" />
+                <line number="79" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="33" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String,System.Int32,System.Int32,System.Int32,System.DateTime,System.String,System.String,LibriKeep.Core.Domain.Enums.TipoMaterial)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="36" hits="4" branch="False" />
+                <line number="37" hits="4" branch="False" />
+                <line number="38" hits="4" branch="False" />
+                <line number="40" hits="4" branch="False" />
+                <line number="41" hits="4" branch="False" />
+                <line number="42" hits="4" branch="False" />
+                <line number="43" hits="4" branch="False" />
+                <line number="44" hits="4" branch="False" />
+                <line number="45" hits="4" branch="False" />
+                <line number="46" hits="4" branch="False" />
+                <line number="47" hits="4" branch="False" />
+                <line number="48" hits="4" branch="False" />
+                <line number="49" hits="4" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="10" hits="5" branch="False" />
+            <line number="11" hits="5" branch="False" />
+            <line number="12" hits="4" branch="False" />
+            <line number="14" hits="4" branch="False" />
+            <line number="15" hits="4" branch="False" />
+            <line number="17" hits="4" branch="False" />
+            <line number="18" hits="4" branch="False" />
+            <line number="20" hits="4" branch="False" />
+            <line number="21" hits="4" branch="False" />
+            <line number="23" hits="4" branch="False" />
+            <line number="24" hits="4" branch="False" />
+            <line number="25" hits="4" branch="False" />
+            <line number="26" hits="4" branch="False" />
+            <line number="28" hits="9" branch="False" />
+            <line number="29" hits="5" branch="False" />
+            <line number="52" hits="0" branch="False" />
+            <line number="53" hits="0" branch="False" />
+            <line number="55" hits="0" branch="False" />
+            <line number="56" hits="0" branch="False" />
+            <line number="57" hits="0" branch="False" />
+            <line number="58" hits="0" branch="False" />
+            <line number="59" hits="0" branch="False" />
+            <line number="60" hits="0" branch="False" />
+            <line number="61" hits="0" branch="False" />
+            <line number="62" hits="0" branch="False" />
+            <line number="63" hits="0" branch="False" />
+            <line number="64" hits="0" branch="False" />
+            <line number="67" hits="4" branch="False" />
+            <line number="68" hits="4" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="9" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="69" hits="0" branch="False" />
+            <line number="70" hits="0" branch="False" />
+            <line number="74" hits="4" branch="False" />
+            <line number="75" hits="4" branch="True" condition-coverage="50% (2/4)">
+              <conditions>
+                <condition number="68" type="jump" coverage="50%" />
+                <condition number="88" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="76" hits="0" branch="False" />
+            <line number="77" hits="0" branch="False" />
+            <line number="79" hits="4" branch="False" />
+            <line number="33" hits="0" branch="False" />
+            <line number="36" hits="4" branch="False" />
+            <line number="37" hits="4" branch="False" />
+            <line number="38" hits="4" branch="False" />
+            <line number="40" hits="4" branch="False" />
+            <line number="41" hits="4" branch="False" />
+            <line number="42" hits="4" branch="False" />
+            <line number="43" hits="4" branch="False" />
+            <line number="44" hits="4" branch="False" />
+            <line number="45" hits="4" branch="False" />
+            <line number="46" hits="4" branch="False" />
+            <line number="47" hits="4" branch="False" />
+            <line number="48" hits="4" branch="False" />
+            <line number="49" hits="4" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Prestamo" filename="LibriKeep.Core.Domain\Entities\Prestamo.cs" line-rate="0.647" branch-rate="0.5" complexity="22">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="get_UsuarioId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="9" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Usuario" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="14" branch="False" />
+              </lines>
+            </method>
+            <method name="get_EjemplarId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="8" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Ejemplar" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="16" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaSalida" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaMaxDevolucion" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="18" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaDevolucionEfectiva" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Estado" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="20" branch="False" />
+              </lines>
+            </method>
+            <method name="ProcesarDevolucion" signature="(System.DateTime,System.Boolean,LibriKeep.Core.Domain.Enums.EstadoEjemplar)" line-rate="0.8421" branch-rate="0.625" complexity="8">
+              <lines>
+                <line number="45" hits="3" branch="False" />
+                <line number="46" hits="3" branch="True" condition-coverage="50% (2/4)">
+                  <conditions>
+                    <condition number="7" type="jump" coverage="50%" />
+                    <condition number="26" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="47" hits="0" branch="False" />
+                <line number="48" hits="0" branch="False" />
+                <line number="51" hits="3" branch="False" />
+                <line number="52" hits="3" branch="False" />
+                <line number="55" hits="3" branch="False" />
+                <line number="59" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="108" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="60" hits="1" branch="False" />
+                <line number="61" hits="1" branch="False" />
+                <line number="62" hits="1" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="155" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="63" hits="1" branch="False" />
+                <line number="64" hits="1" branch="False" />
+                <line number="67" hits="1" branch="False" />
+                <line number="70" hits="1" branch="False" />
+                <line number="72" hits="1" branch="False" />
+                <line number="74" hits="0" branch="False" />
+                <line number="76" hits="2" branch="False" />
+                <line number="77" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="MarcarDemorado" signature="()" line-rate="0" branch-rate="0" complexity="2">
+              <lines>
+                <line number="80" hits="0" branch="False" />
+                <line number="81" hits="0" branch="True" condition-coverage="0% (0/2)">
+                  <conditions>
+                    <condition number="12" type="jump" coverage="0%" />
+                  </conditions>
+                </line>
+                <line number="82" hits="0" branch="False" />
+                <line number="83" hits="0" branch="False" />
+                <line number="84" hits="0" branch="False" />
+                <line number="85" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="23" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.Int32,System.DateTime,System.Int32)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="26" hits="7" branch="False" />
+                <line number="27" hits="7" branch="False" />
+                <line number="28" hits="7" branch="False" />
+                <line number="29" hits="7" branch="False" />
+                <line number="30" hits="7" branch="False" />
+                <line number="31" hits="7" branch="False" />
+                <line number="32" hits="7" branch="False" />
+                <line number="33" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.Int32,System.DateTime,System.DateTime)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="35" hits="0" branch="False" />
+                <line number="36" hits="0" branch="False" />
+                <line number="37" hits="0" branch="False" />
+                <line number="38" hits="0" branch="False" />
+                <line number="39" hits="0" branch="False" />
+                <line number="40" hits="0" branch="False" />
+                <line number="41" hits="0" branch="False" />
+                <line number="42" hits="0" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="9" hits="5" branch="False" />
+            <line number="10" hits="9" branch="False" />
+            <line number="11" hits="14" branch="False" />
+            <line number="13" hits="8" branch="False" />
+            <line number="14" hits="16" branch="False" />
+            <line number="16" hits="7" branch="False" />
+            <line number="17" hits="18" branch="False" />
+            <line number="18" hits="3" branch="False" />
+            <line number="19" hits="20" branch="False" />
+            <line number="45" hits="3" branch="False" />
+            <line number="46" hits="3" branch="True" condition-coverage="50% (2/4)">
+              <conditions>
+                <condition number="7" type="jump" coverage="50%" />
+                <condition number="26" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="47" hits="0" branch="False" />
+            <line number="48" hits="0" branch="False" />
+            <line number="51" hits="3" branch="False" />
+            <line number="52" hits="3" branch="False" />
+            <line number="55" hits="3" branch="False" />
+            <line number="59" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="108" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="60" hits="1" branch="False" />
+            <line number="61" hits="1" branch="False" />
+            <line number="62" hits="1" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="155" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="63" hits="1" branch="False" />
+            <line number="64" hits="1" branch="False" />
+            <line number="67" hits="1" branch="False" />
+            <line number="70" hits="1" branch="False" />
+            <line number="72" hits="1" branch="False" />
+            <line number="74" hits="0" branch="False" />
+            <line number="76" hits="2" branch="False" />
+            <line number="77" hits="3" branch="False" />
+            <line number="80" hits="0" branch="False" />
+            <line number="81" hits="0" branch="True" condition-coverage="0% (0/2)">
+              <conditions>
+                <condition number="12" type="jump" coverage="0%" />
+              </conditions>
+            </line>
+            <line number="82" hits="0" branch="False" />
+            <line number="83" hits="0" branch="False" />
+            <line number="84" hits="0" branch="False" />
+            <line number="85" hits="0" branch="False" />
+            <line number="23" hits="0" branch="False" />
+            <line number="26" hits="7" branch="False" />
+            <line number="27" hits="7" branch="False" />
+            <line number="28" hits="7" branch="False" />
+            <line number="29" hits="7" branch="False" />
+            <line number="30" hits="7" branch="False" />
+            <line number="31" hits="7" branch="False" />
+            <line number="32" hits="7" branch="False" />
+            <line number="33" hits="7" branch="False" />
+            <line number="35" hits="0" branch="False" />
+            <line number="36" hits="0" branch="False" />
+            <line number="37" hits="0" branch="False" />
+            <line number="38" hits="0" branch="False" />
+            <line number="39" hits="0" branch="False" />
+            <line number="40" hits="0" branch="False" />
+            <line number="41" hits="0" branch="False" />
+            <line number="42" hits="0" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Reserva" filename="LibriKeep.Core.Domain\Entities\Reserva.cs" line-rate="0.6923" branch-rate="1" complexity="13">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_UsuarioId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Usuario" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_LibroId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Libro" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaReserva" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PosicionCola" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Estado" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="Procesar" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="34" hits="1" branch="False" />
+                <line number="35" hits="1" branch="False" />
+                <line number="36" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="Cancelar" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="39" hits="0" branch="False" />
+                <line number="40" hits="0" branch="False" />
+                <line number="41" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Expirar" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="44" hits="0" branch="False" />
+                <line number="45" hits="0" branch="False" />
+                <line number="46" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.Int32,System.DateTime,System.Int32)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="24" hits="2" branch="False" />
+                <line number="25" hits="2" branch="False" />
+                <line number="26" hits="2" branch="False" />
+                <line number="27" hits="2" branch="False" />
+                <line number="28" hits="2" branch="False" />
+                <line number="29" hits="2" branch="False" />
+                <line number="30" hits="2" branch="False" />
+                <line number="31" hits="2" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="3" branch="False" />
+            <line number="10" hits="2" branch="False" />
+            <line number="12" hits="3" branch="False" />
+            <line number="13" hits="2" branch="False" />
+            <line number="15" hits="2" branch="False" />
+            <line number="16" hits="3" branch="False" />
+            <line number="17" hits="5" branch="False" />
+            <line number="34" hits="1" branch="False" />
+            <line number="35" hits="1" branch="False" />
+            <line number="36" hits="1" branch="False" />
+            <line number="39" hits="0" branch="False" />
+            <line number="40" hits="0" branch="False" />
+            <line number="41" hits="0" branch="False" />
+            <line number="44" hits="0" branch="False" />
+            <line number="45" hits="0" branch="False" />
+            <line number="46" hits="0" branch="False" />
+            <line number="21" hits="0" branch="False" />
+            <line number="24" hits="2" branch="False" />
+            <line number="25" hits="2" branch="False" />
+            <line number="26" hits="2" branch="False" />
+            <line number="27" hits="2" branch="False" />
+            <line number="28" hits="2" branch="False" />
+            <line number="29" hits="2" branch="False" />
+            <line number="30" hits="2" branch="False" />
+            <line number="31" hits="2" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Sancion" filename="LibriKeep.Core.Domain\Entities\Sancion.cs" line-rate="0.64" branch-rate="1" complexity="13">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="8" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_UsuarioId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="9" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Usuario" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="10" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PrestamoId" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Prestamo" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaInicio" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="get_FechaFin" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="9" branch="False" />
+              </lines>
+            </method>
+            <method name="get_DiasSancion" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="4" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Estado" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="Expirar" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="36" hits="0" branch="False" />
+                <line number="37" hits="0" branch="False" />
+                <line number="38" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Levantar" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="41" hits="0" branch="False" />
+                <line number="42" hits="0" branch="False" />
+                <line number="43" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.Int32,System.Nullable`1&lt;System.Int32&gt;,System.DateTime,System.Int32)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="25" hits="3" branch="False" />
+                <line number="26" hits="3" branch="False" />
+                <line number="27" hits="3" branch="False" />
+                <line number="28" hits="3" branch="False" />
+                <line number="29" hits="3" branch="False" />
+                <line number="30" hits="3" branch="False" />
+                <line number="31" hits="3" branch="False" />
+                <line number="32" hits="3" branch="False" />
+                <line number="33" hits="3" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="8" hits="0" branch="False" />
+            <line number="9" hits="3" branch="False" />
+            <line number="10" hits="3" branch="False" />
+            <line number="12" hits="3" branch="False" />
+            <line number="13" hits="0" branch="False" />
+            <line number="15" hits="7" branch="False" />
+            <line number="16" hits="9" branch="False" />
+            <line number="17" hits="4" branch="False" />
+            <line number="18" hits="7" branch="False" />
+            <line number="36" hits="0" branch="False" />
+            <line number="37" hits="0" branch="False" />
+            <line number="38" hits="0" branch="False" />
+            <line number="41" hits="0" branch="False" />
+            <line number="42" hits="0" branch="False" />
+            <line number="43" hits="0" branch="False" />
+            <line number="22" hits="0" branch="False" />
+            <line number="25" hits="3" branch="False" />
+            <line number="26" hits="3" branch="False" />
+            <line number="27" hits="3" branch="False" />
+            <line number="28" hits="3" branch="False" />
+            <line number="29" hits="3" branch="False" />
+            <line number="30" hits="3" branch="False" />
+            <line number="31" hits="3" branch="False" />
+            <line number="32" hits="3" branch="False" />
+            <line number="33" hits="3" branch="False" />
+          </lines>
+        </class>
+        <class name="LibriKeep.Core.Domain.Entities.Usuario" filename="LibriKeep.Core.Domain\Entities\Usuario.cs" line-rate="0.6940999999999999" branch-rate="0.5357" complexity="46">
+          <methods>
+            <method name="get_Id" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="11" hits="13" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Dni" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="12" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="get_NombreCompleto" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="13" hits="14" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Email" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="14" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="get_PasswordHash" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="15" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Telefono" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="16" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="get_TipoMiembro" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="17" hits="14" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Rol" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="18" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Estado" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="19" hits="30" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Prestamos" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="21" hits="22" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Sanciones" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="22" hits="22" branch="False" />
+              </lines>
+            </method>
+            <method name="get_Reservas" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="23" hits="11" branch="False" />
+              </lines>
+            </method>
+            <method name="Update" signature="(System.String,System.String,System.String,LibriKeep.Core.Domain.Enums.TipoMiembro,LibriKeep.Core.Domain.Enums.Rol,LibriKeep.Core.Domain.Enums.EstadoUsuario)" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="43" hits="0" branch="False" />
+                <line number="44" hits="0" branch="False" />
+                <line number="45" hits="0" branch="False" />
+                <line number="46" hits="0" branch="False" />
+                <line number="47" hits="0" branch="False" />
+                <line number="48" hits="0" branch="False" />
+                <line number="49" hits="0" branch="False" />
+                <line number="50" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Suspender" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="53" hits="0" branch="False" />
+                <line number="54" hits="0" branch="False" />
+                <line number="55" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="Activar" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="58" hits="0" branch="False" />
+                <line number="59" hits="0" branch="False" />
+                <line number="60" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name="BloquearTemporalmente" signature="()" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="63" hits="1" branch="False" />
+                <line number="64" hits="1" branch="False" />
+                <line number="65" hits="1" branch="False" />
+              </lines>
+            </method>
+            <method name="GetMaxPrestamosPermitidos" signature="()" line-rate="0.6666" branch-rate="0.25" complexity="4">
+              <lines>
+                <line number="68" hits="3" branch="False" />
+                <line number="69" hits="3" branch="True" condition-coverage="25% (1/4)">
+                  <conditions>
+                    <condition number="13" type="switch" coverage="25%" />
+                  </conditions>
+                </line>
+                <line number="70" hits="3" branch="False" />
+                <line number="71" hits="3" branch="False" />
+                <line number="72" hits="0" branch="False" />
+                <line number="73" hits="0" branch="False" />
+                <line number="74" hits="0" branch="False" />
+                <line number="75" hits="3" branch="False" />
+                <line number="76" hits="3" branch="False" />
+              </lines>
+            </method>
+            <method name="TieneSancionActiva" signature="(System.DateTime)" line-rate="1" branch-rate="0.5" complexity="4">
+              <lines>
+                <line number="79" hits="7" branch="False" />
+                <line number="80" hits="9" branch="True" condition-coverage="50% (2/4)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="50%" />
+                    <condition number="25" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="81" hits="7" branch="False" />
+              </lines>
+            </method>
+            <method name="TienePrestamoVencido" signature="(System.DateTime)" line-rate="1" branch-rate="0.5" complexity="2">
+              <lines>
+                <line number="84" hits="5" branch="False" />
+                <line number="85" hits="8" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="86" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="TieneMultaImpagada" signature="()" line-rate="1" branch-rate="0.5" complexity="2">
+              <lines>
+                <line number="89" hits="5" branch="False" />
+                <line number="93" hits="5" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="8" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="94" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidarCapacidadCirculacion" signature="(System.DateTime)" line-rate="0.5555" branch-rate="0.5832999999999999" complexity="12">
+              <lines>
+                <line number="97" hits="7" branch="False" />
+                <line number="99" hits="7" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="25" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="100" hits="0" branch="False" />
+                <line number="101" hits="0" branch="False" />
+                <line number="104" hits="7" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="58" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="105" hits="2" branch="False" />
+                <line number="106" hits="4" branch="True" condition-coverage="50% (2/4)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="50%" />
+                    <condition number="25" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="107" hits="2" branch="False" />
+                <line number="108" hits="2" branch="False" />
+                <line number="111" hits="5" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="201" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="112" hits="0" branch="False" />
+                <line number="113" hits="0" branch="False" />
+                <line number="114" hits="0" branch="False" />
+                <line number="117" hits="5" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="246" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="118" hits="0" branch="False" />
+                <line number="119" hits="0" branch="False" />
+                <line number="120" hits="0" branch="False" />
+                <line number="122" hits="5" branch="False" />
+              </lines>
+            </method>
+            <method name="ValidarLmitePrestamos" signature="()" line-rate="1" branch-rate="0.75" complexity="4">
+              <lines>
+                <line number="125" hits="3" branch="False" />
+                <line number="127" hits="6" branch="True" condition-coverage="50% (1/2)">
+                  <conditions>
+                    <condition number="6" type="jump" coverage="50%" />
+                  </conditions>
+                </line>
+                <line number="128" hits="3" branch="False" />
+                <line number="130" hits="3" branch="True" condition-coverage="100% (2/2)">
+                  <conditions>
+                    <condition number="60" type="jump" coverage="100%" />
+                  </conditions>
+                </line>
+                <line number="131" hits="1" branch="False" />
+                <line number="132" hits="1" branch="False" />
+                <line number="133" hits="1" branch="False" />
+                <line number="135" hits="2" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="()" line-rate="0" branch-rate="1" complexity="1">
+              <lines>
+                <line number="27" hits="0" branch="False" />
+              </lines>
+            </method>
+            <method name=".ctor" signature="(System.String,System.String,System.String,System.String,System.String,LibriKeep.Core.Domain.Enums.TipoMiembro,LibriKeep.Core.Domain.Enums.Rol)" line-rate="1" branch-rate="1" complexity="1">
+              <lines>
+                <line number="30" hits="11" branch="False" />
+                <line number="31" hits="11" branch="False" />
+                <line number="32" hits="11" branch="False" />
+                <line number="33" hits="11" branch="False" />
+                <line number="34" hits="11" branch="False" />
+                <line number="35" hits="11" branch="False" />
+                <line number="36" hits="11" branch="False" />
+                <line number="37" hits="11" branch="False" />
+                <line number="38" hits="11" branch="False" />
+                <line number="39" hits="11" branch="False" />
+                <line number="40" hits="11" branch="False" />
+              </lines>
+            </method>
+          </methods>
+          <lines>
+            <line number="11" hits="13" branch="False" />
+            <line number="12" hits="11" branch="False" />
+            <line number="13" hits="14" branch="False" />
+            <line number="14" hits="11" branch="False" />
+            <line number="15" hits="11" branch="False" />
+            <line number="16" hits="11" branch="False" />
+            <line number="17" hits="14" branch="False" />
+            <line number="18" hits="11" branch="False" />
+            <line number="19" hits="30" branch="False" />
+            <line number="21" hits="22" branch="False" />
+            <line number="22" hits="22" branch="False" />
+            <line number="23" hits="11" branch="False" />
+            <line number="43" hits="0" branch="False" />
+            <line number="44" hits="0" branch="False" />
+            <line number="45" hits="0" branch="False" />
+            <line number="46" hits="0" branch="False" />
+            <line number="47" hits="0" branch="False" />
+            <line number="48" hits="0" branch="False" />
+            <line number="49" hits="0" branch="False" />
+            <line number="50" hits="0" branch="False" />
+            <line number="53" hits="0" branch="False" />
+            <line number="54" hits="0" branch="False" />
+            <line number="55" hits="0" branch="False" />
+            <line number="58" hits="0" branch="False" />
+            <line number="59" hits="0" branch="False" />
+            <line number="60" hits="0" branch="False" />
+            <line number="63" hits="1" branch="False" />
+            <line number="64" hits="1" branch="False" />
+            <line number="65" hits="1" branch="False" />
+            <line number="68" hits="3" branch="False" />
+            <line number="69" hits="3" branch="True" condition-coverage="25% (1/4)">
+              <conditions>
+                <condition number="13" type="switch" coverage="25%" />
+              </conditions>
+            </line>
+            <line number="70" hits="3" branch="False" />
+            <line number="71" hits="3" branch="False" />
+            <line number="72" hits="0" branch="False" />
+            <line number="73" hits="0" branch="False" />
+            <line number="74" hits="0" branch="False" />
+            <line number="75" hits="3" branch="False" />
+            <line number="76" hits="3" branch="False" />
+            <line number="79" hits="7" branch="False" />
+            <line number="80" hits="9" branch="True" condition-coverage="50% (2/4)">
+              <conditions>
+                <condition number="6" type="jump" coverage="50%" />
+                <condition number="25" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="81" hits="7" branch="False" />
+            <line number="84" hits="5" branch="False" />
+            <line number="85" hits="8" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="6" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="86" hits="5" branch="False" />
+            <line number="89" hits="5" branch="False" />
+            <line number="93" hits="5" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="8" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="94" hits="5" branch="False" />
+            <line number="97" hits="7" branch="False" />
+            <line number="99" hits="7" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="25" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="100" hits="0" branch="False" />
+            <line number="101" hits="0" branch="False" />
+            <line number="104" hits="7" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="58" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="105" hits="2" branch="False" />
+            <line number="106" hits="4" branch="True" condition-coverage="50% (2/4)">
+              <conditions>
+                <condition number="6" type="jump" coverage="50%" />
+                <condition number="25" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="107" hits="2" branch="False" />
+            <line number="108" hits="2" branch="False" />
+            <line number="111" hits="5" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="201" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="112" hits="0" branch="False" />
+            <line number="113" hits="0" branch="False" />
+            <line number="114" hits="0" branch="False" />
+            <line number="117" hits="5" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="246" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="118" hits="0" branch="False" />
+            <line number="119" hits="0" branch="False" />
+            <line number="120" hits="0" branch="False" />
+            <line number="122" hits="5" branch="False" />
+            <line number="125" hits="3" branch="False" />
+            <line number="127" hits="6" branch="True" condition-coverage="50% (1/2)">
+              <conditions>
+                <condition number="6" type="jump" coverage="50%" />
+              </conditions>
+            </line>
+            <line number="128" hits="3" branch="False" />
+            <line number="130" hits="3" branch="True" condition-coverage="100% (2/2)">
+              <conditions>
+                <condition number="60" type="jump" coverage="100%" />
+              </conditions>
+            </line>
+            <line number="131" hits="1" branch="False" />
+            <line number="132" hits="1" branch="False" />
+            <line number="133" hits="1" branch="False" />
+            <line number="135" hits="2" branch="False" />
+            <line number="27" hits="0" branch="False" />
+            <line number="30" hits="11" branch="False" />
+            <line number="31" hits="11" branch="False" />
+            <line number="32" hits="11" branch="False" />
+            <line number="33" hits="11" branch="False" />
+            <line number="34" hits="11" branch="False" />
+            <line number="35" hits="11" branch="False" />
+            <line number="36" hits="11" branch="False" />
+            <line number="37" hits="11" branch="False" />
+            <line number="38" hits="11" branch="False" />
+            <line number="39" hits="11" branch="False" />
+            <line number="40" hits="11" branch="False" />
+          </lines>
+        </class>
+      </classes>
+    </package>
+  </packages>
+</coverage>

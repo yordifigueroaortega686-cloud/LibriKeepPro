@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    font-family: 'Inter', sans-serif;
+  }
+}
+
+/* Custom glassmorphism and animation details */
+.glass-panel {
+  background: rgba(30, 41, 59, 0.45);
+  backdrop-filter: blur(8px);
+  border: 1px border rgba(255, 255, 255, 0.05);
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

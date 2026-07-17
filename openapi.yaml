@@ -1,0 +1,2200 @@
+openapi: 3.0.3
+info:
+  title: LibriKeep API
+  description: API empresarial de gestión de inventario, control de activos y préstamos automatizados para bibliotecas.
+  version: 1.0.0
+servers:
+  - url: /api
+    description: URL relativa para el entorno de desarrollo y producción
+paths:
+  /auth/login:
+    post:
+      summary: Autenticar usuario
+      description: Permite a los usuarios (Lectores, Bibliotecarios, Administradores) iniciar sesión y obtener un token JWT.
+      operationId: login
+      tags:
+        - Autenticación
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: alumno@uni.edu.pe
+                password:
+                  type: string
+                  format: password
+                  example: P@ssw0rd123
+      responses:
+        '200':
+          description: Autenticación exitosa. Devuelve el token JWT y los datos del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          description: Solicitud incorrecta o cuenta bloqueada por demasiados intentos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Credenciales inválidas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /opac/libros:
+    get:
+      summary: Buscar libros públicamente
+      description: Endpoint de acceso libre (sin JWT) para buscar libros con filtros.
+      operationId: searchOpacBooks
+      tags:
+        - OPAC
+      parameters:
+        - name: query
+          in: query
+          description: Buscar por título, autor o ISBN
+          required: false
+          schema:
+            type: string
+        - name: autorId
+          in: query
+          description: Filtrar por identificador de autor
+          required: false
+          schema:
+            type: integer
+        - name: categoriaId
+          in: query
+          description: Filtrar por identificador de categoría
+          required: false
+          schema:
+            type: integer
+        - name: tipoMaterial
+          in: query
+          description: Filtrar por tipo de material
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: Número de página para paginación
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          description: Tamaño de la página
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista paginada de libros con disponibilidad en tiempo real.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBooks'
+
+  /opac/libros/{id}:
+    get:
+      summary: Obtener detalle público de un libro
+      description: Endpoint de acceso libre para obtener la ficha bibliográfica de un libro y el estado individual de sus ejemplares.
+      operationId: getOpacBookById
+      tags:
+        - OPAC
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: Identificador del libro
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalle del libro con su estado y ejemplares.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDetail'
+        '404':
+          description: Libro no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /libros:
+    get:
+      summary: Listar libros (Gestión)
+      description: Listar libros con filtros avanzados para el personal administrativo y bibliotecarios.
+      operationId: getBooks
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: autorId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: categoriaId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista paginada de libros en el catálogo administrativo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBooks'
+        '401':
+          description: No autorizado. Token faltante o inválido.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Permisos insuficientes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Crear registro bibliográfico
+      description: Permite registrar una nueva obra en el catálogo. Valida ISBN duplicado.
+      operationId: createBook
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateBookDto'
+      responses:
+        '201':
+          description: Libro creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+        '400':
+          description: Error de validación o ISBN duplicado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '403':
+          description: Acceso denegado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /libros/{id}:
+    get:
+      summary: Obtener detalle administrativo de un libro
+      description: Devuelve el detalle del libro para operaciones de catalogación.
+      operationId: getBookById
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalles de la obra.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar registro bibliográfico
+      description: Modifica los metadatos de un libro existente.
+      operationId: updateBook
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateBookDto'
+      responses:
+        '200':
+          description: Libro actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookDto'
+        '400':
+          description: Datos inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Eliminar registro bibliográfico
+      description: Elimina una obra si no cuenta con ejemplares prestados o reservados.
+      operationId: deleteBook
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Libro eliminado exitosamente. No content.
+        '400':
+          description: No se puede eliminar por dependencias activas (ejemplares en préstamo/reserva).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /libros/{libroId}/ejemplares:
+    get:
+      summary: Listar ejemplares de un libro
+      description: Obtiene la lista de copias físicas vinculadas al libro.
+      operationId: getEjemplaresByLibro
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: libroId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de ejemplares del libro.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EjemplarDto'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Libro no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      summary: Crear ejemplar (Copia física)
+      description: Agrega un nuevo ejemplar físico a una obra con su código de barras único.
+      operationId: createEjemplar
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: libroId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEjemplarDto'
+      responses:
+        '201':
+          description: Ejemplar creado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EjemplarDto'
+        '400':
+          description: Código de barras duplicado o datos inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ejemplares/{id}:
+    get:
+      summary: Obtener detalle del ejemplar
+      description: Devuelve el estado de un ejemplar individual.
+      operationId: getEjemplarById
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalle del ejemplar físico.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EjemplarDto'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ejemplar no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      summary: Actualizar estado u observaciones del ejemplar
+      description: Permite a los bibliotecarios cambiar el estado del ejemplar (Ej. Mantenimiento, Pérdida) y actualizar las observaciones.
+      operationId: updateEjemplar
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEjemplarDto'
+      responses:
+        '200':
+          description: Ejemplar actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EjemplarDto'
+        '400':
+          description: Datos de estado incorrectos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ejemplar no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      summary: Eliminar ejemplar físico
+      description: Elimina un ejemplar si no tiene historial activo de préstamos o deudas pendientes.
+      operationId: deleteEjemplar
+      tags:
+        - Catalogación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Ejemplar eliminado correctamente. No content.
+        '400':
+          description: Ejemplar no se puede eliminar por préstamos activos vinculados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Ejemplar no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /autores:
+    get:
+      summary: Listar autores (Autoridades)
+      description: Obtiene la lista de autores registrados para evitar redundancia de nombres.
+      operationId: getAutores
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: query
+          in: query
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de autores.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AutorDto'
+    post:
+      summary: Registrar nuevo autor
+      description: Agrega un autor único al sistema de control de autoridades.
+      operationId: createAutor
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAutorDto'
+      responses:
+        '201':
+          description: Autor creado correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutorDto'
+        '400':
+          description: Nombre de autor duplicado o datos inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /autores/{id}:
+    put:
+      summary: Actualizar autor
+      operationId: updateAutor
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAutorDto'
+      responses:
+        '200':
+          description: Autor actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AutorDto'
+        '404':
+          description: Autor no encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+    delete:
+      summary: Eliminar autor
+      description: Elimina un autor si no tiene obras asociadas.
+      operationId: deleteAutor
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Autor eliminado correctamente.
+        '400':
+          description: No se puede eliminar un autor con obras asociadas.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /categorias:
+    get:
+      summary: Listar categorías
+      operationId: getCategorias
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de categorías.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CategoriaDto'
+    post:
+      summary: Crear categoría
+      operationId: createCategoria
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoriaDto'
+      responses:
+        '201':
+          description: Categoría creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CategoriaDto'
+
+  /categorias/{id}:
+    put:
+      summary: Actualizar categoría
+      operationId: updateCategoria
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCategoriaDto'
+      responses:
+        '200':
+          description: Categoría actualizada.
+        '404':
+          description: Categoría no encontrada.
+    delete:
+      summary: Eliminar categoría
+      operationId: deleteCategoria
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Categoría eliminada.
+        '400':
+          description: Categoría asociada a libros existentes.
+
+  /editoriales:
+    get:
+      summary: Listar editoriales
+      operationId: getEditoriales
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de editoriales.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EditorialDto'
+    post:
+      summary: Crear editorial
+      operationId: createEditorial
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEditorialDto'
+      responses:
+        '201':
+          description: Editorial creada.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EditorialDto'
+
+  /editoriales/{id}:
+    put:
+      summary: Actualizar editorial
+      operationId: updateEditorial
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEditorialDto'
+      responses:
+        '200':
+          description: Editorial actualizada.
+    delete:
+      summary: Eliminar editorial
+      operationId: deleteEditorial
+      tags:
+        - Autoridades
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Editorial eliminada.
+
+  /usuarios:
+    get:
+      summary: Listar usuarios del sistema
+      description: Devuelve la lista de usuarios. Requiere rol de Bibliotecario o Administrador.
+      operationId: getUsuarios
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: search
+          in: query
+          description: Búsqueda por DNI, nombre o correo.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Lista de usuarios.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UsuarioDto'
+        '401':
+          description: No autorizado.
+        '403':
+          description: Acceso denegado.
+
+    post:
+      summary: Registrar un nuevo usuario
+      description: Permite registrar usuarios Lectores (Alumnos, Docentes, Personal Administrativo) y Personal de Biblioteca.
+      operationId: createUsuario
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUsuarioDto'
+      responses:
+        '201':
+          description: Usuario registrado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDto'
+        '400':
+          description: DNI o Correo electrónico ya registrados, o datos inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /usuarios/{id}:
+    get:
+      summary: Obtener datos de un usuario
+      operationId: getUsuarioById
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Datos del usuario.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDto'
+        '404':
+          description: Usuario no encontrado.
+
+    put:
+      summary: Actualizar perfil de usuario
+      operationId: updateUsuario
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUsuarioDto'
+      responses:
+        '200':
+          description: Usuario actualizado correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioDto'
+        '404':
+          description: Usuario no encontrado.
+
+    delete:
+      summary: Dar de baja a un usuario (Eliminación lógica o física)
+      description: Desactiva un usuario si no cuenta con deudas o préstamos activos.
+      operationId: deleteUsuario
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Usuario eliminado o desactivado correctamente.
+        '400':
+          description: El usuario cuenta con préstamos vigentes o sanciones pendientes.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /usuarios/{id}/perfil:
+    get:
+      summary: Obtener perfil y métricas en tiempo real de un lector
+      description: Permite al Lector o a los Bibliotecarios ver las métricas de circulación del usuario (Préstamos permitidos, activos, sanciones, morosidad).
+      operationId: getUsuarioPerfil
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Perfil completo del lector con métricas de circulación.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsuarioPerfilDto'
+        '401':
+          description: No autorizado.
+        '404':
+          description: Usuario no encontrado.
+
+  /usuarios/{id}/sanciones:
+    get:
+      summary: Listar historial de sanciones de un usuario
+      operationId: getUsuarioSanciones
+      tags:
+        - Usuarios
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Historial de sanciones del usuario.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SancionDto'
+
+  /circulacion/prestamos:
+    get:
+      summary: Listar préstamos (Circulación)
+      description: Consulta administrativa de préstamos activos, demorados o devueltos.
+      operationId: getPrestamos
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: usuarioId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: estado
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [Activo, Devuelto, Demorado]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 1
+        - name: pageSize
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 10
+      responses:
+        '200':
+          description: Lista paginada de préstamos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPrestamos'
+
+    post:
+      summary: Registrar nuevo préstamo
+      description: Dispara la regla de negocio para prestar un ejemplar físico. Valida RN-01 (Copias disponibles), RN-02 (Morosidad/Sanción activa del usuario) y RN-03 (Límites por rol). Ejecutado bajo transacciones atómicas.
+      operationId: registrarPrestamo
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrarPrestamoDto'
+      responses:
+        '201':
+          description: Préstamo registrado exitosamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrestamoDto'
+        '400':
+          description: Infracción de reglas de negocio (RN-01, RN-02, RN-03) o datos de entrada inválidos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+        '403':
+          description: Acceso denegado (Solo Bibliotecarios).
+
+  /circulacion/prestamos/{id}:
+    get:
+      summary: Obtener detalle del préstamo
+      operationId: getPrestamoById
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Detalle del préstamo solicitado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PrestamoDto'
+        '404':
+          description: Préstamo no encontrado.
+
+  /circulacion/devoluciones:
+    post:
+      summary: Procesar devolución efectiva de un ejemplar
+      description: Registra el retorno de un activo físico. Cambia el estado del ejemplar. Valida automáticamente retrasos calendarios aplicando la penalización RN-04. Ejecuta la lógica de prioridad de reservas RN-05.
+      operationId: procesarDevolucion
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ProcesarDevolucionDto'
+      responses:
+        '200':
+          description: Devolución procesada correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DevolucionResponseDto'
+        '400':
+          description: Datos incorrectos o ejemplar no se encuentra en préstamo activo.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: No autorizado.
+
+  /circulacion/reservas:
+    get:
+      summary: Listar reservas del sistema
+      operationId: getReservas
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: libroId
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: usuarioId
+          in: query
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de reservas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReservaDto'
+
+    post:
+      summary: Solicitar reserva de un libro
+      description: Registra una reserva para un libro que se encuentra totalmente prestado. Entra a cola de espera. Valida RN-02 (Usuario no sancionado ni moroso).
+      operationId: crearReserva
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CrearReservaDto'
+      responses:
+        '201':
+          description: Reserva creada con éxito.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReservaDto'
+        '400':
+          description: No se puede reservar si el usuario está bloqueado o si hay copias disponibles para préstamo inmediato.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /circulacion/reservas/{id}:
+    delete:
+      summary: Cancelar una reserva activa
+      operationId: cancelarReserva
+      tags:
+        - Circulación
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Reserva cancelada exitosamente. No content.
+        '404':
+          description: Reserva no encontrada o ya procesada.
+
+  /configuracion:
+    get:
+      summary: Obtener parámetros y políticas institucionales
+      description: Lee las configuraciones de negocio como límites de préstamos y sanciones.
+      operationId: getConfiguracion
+      tags:
+        - Configuración
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Parámetros del sistema.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfiguracionDto'
+
+    put:
+      summary: Actualizar parámetros globales de la biblioteca
+      operationId: updateConfiguracion
+      tags:
+        - Configuración
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConfiguracionDto'
+      responses:
+        '200':
+          description: Parámetros actualizados correctamente.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConfiguracionDto'
+        '400':
+          description: Parámetros inválidos.
+
+  /reportes/estadisticas:
+    get:
+      summary: Obtener métricas y KPIs en tiempo real
+      description: Devuelve el panel de control de estadísticas institucionales para directores y administradores.
+      operationId: getEstadisticas
+      tags:
+        - Reportes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Indicadores clave de rendimiento (KPIs).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EstadisticasDto'
+
+  /reportes/mas-solicitados:
+    get:
+      summary: Libros y autores más solicitados (Ranking)
+      operationId: getMasSolicitados
+      tags:
+        - Reportes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Ranking de obras con mayor circulación.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReporteMasSolicitadoDto'
+
+  /reportes/mantenimiento-perdidos:
+    get:
+      summary: Listar inventario dañado o extraviado
+      operationId: getMantenimientoPerdidos
+      tags:
+        - Reportes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Lista de ejemplares catalogados en mal estado o perdidos.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReporteEjemplarProblemaDto'
+
+  /reportes/morosos:
+    get:
+      summary: Listar usuarios deudores o con cuentas bloqueadas
+      operationId: getUsuariosMorosos
+      tags:
+        - Reportes
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: Listado de usuarios morosos con su balance de deudas y penalizaciones activas.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReporteUsuarioMorosoDto'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - usuario
+      properties:
+        token:
+          type: string
+          description: Token JWT para autenticar peticiones subsiguientes.
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        usuario:
+          $ref: '#/components/schemas/UsuarioDto'
+
+    UsuarioDto:
+      type: object
+      required:
+        - id
+        - dni
+        - nombreCompleto
+        - email
+        - telefono
+        - tipoMiembro
+        - rol
+        - estado
+      properties:
+        id:
+          type: integer
+          example: 10
+        dni:
+          type: string
+          example: "71234567"
+        nombreCompleto:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          example: alumno@uni.edu.pe
+        telefono:
+          type: string
+          example: "+51999888777"
+        tipoMiembro:
+          type: string
+          enum: [Alumno, Docente, PersonalAdministrativo, Bibliotecario, Externo]
+          example: Alumno
+        rol:
+          type: string
+          enum: [Lector, Bibliotecario, Administrador]
+          example: Lector
+        estado:
+          type: string
+          enum: [Activo, BloqueoTemporal, Suspendido, Inactivo]
+          example: Activo
+        password:
+          type: string
+          description: Contraseña del usuario (solo visible para Administrador)
+          example: Lector123
+
+
+    CreateUsuarioDto:
+      type: object
+      required:
+        - dni
+        - nombreCompleto
+        - email
+        - password
+        - telefono
+        - tipoMiembro
+        - rol
+      properties:
+        dni:
+          type: string
+          example: "71234567"
+        nombreCompleto:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          example: alumno@uni.edu.pe
+        password:
+          type: string
+          format: password
+          example: P@ssw0rd123
+        telefono:
+          type: string
+          example: "+51999888777"
+        tipoMiembro:
+          type: string
+          enum: [Alumno, Docente, PersonalAdministrativo, Bibliotecario, Externo]
+          example: Alumno
+        rol:
+          type: string
+          enum: [Lector, Bibliotecario, Administrador]
+          example: Lector
+
+    UpdateUsuarioDto:
+      type: object
+      required:
+        - nombreCompleto
+        - email
+        - telefono
+        - tipoMiembro
+        - rol
+        - estado
+      properties:
+        nombreCompleto:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          example: alumno@uni.edu.pe
+        telefono:
+          type: string
+          example: "+51999888777"
+        tipoMiembro:
+          type: string
+          enum: [Alumno, Docente, PersonalAdministrativo, Bibliotecario, Externo]
+          example: Alumno
+        rol:
+          type: string
+          enum: [Lector, Bibliotecario, Administrador]
+          example: Lector
+        estado:
+          type: string
+          enum: [Activo, BloqueoTemporal, Suspendido, Inactivo]
+          example: Activo
+
+    UsuarioPerfilDto:
+      type: object
+      required:
+        - usuario
+        - prestamosActivosCount
+        - prestamosPermitidosCount
+        - tieneMultaImpagada
+        - tieneSancionActiva
+        - tienePrestamoVencido
+      properties:
+        usuario:
+          $ref: '#/components/schemas/UsuarioDto'
+        prestamosActivosCount:
+          type: integer
+          example: 1
+        prestamosPermitidosCount:
+          type: integer
+          example: 3
+        tieneMultaImpagada:
+          type: boolean
+          example: false
+        tieneSancionActiva:
+          type: boolean
+          example: true
+        tienePrestamoVencido:
+          type: boolean
+          example: true
+
+    BookDto:
+      type: object
+      required:
+        - id
+        - titulo
+        - isbn
+        - autor
+        - categoria
+        - editorial
+        - fechaPublicacion
+        - idioma
+        - pais
+        - tipoMaterial
+        - totalCopias
+        - copiasDisponibles
+      properties:
+        id:
+          type: integer
+          example: 1
+        titulo:
+          type: string
+          example: Clean Architecture
+        isbn:
+          type: string
+          example: "9780134494166"
+        autor:
+          $ref: '#/components/schemas/AutorDto'
+        categoria:
+          $ref: '#/components/schemas/CategoriaDto'
+        editorial:
+          $ref: '#/components/schemas/EditorialDto'
+        fechaPublicacion:
+          type: string
+          format: date
+          example: "2017-09-10"
+        idioma:
+          type: string
+          example: Español
+        pais:
+          type: string
+          example: Estados Unidos
+        tipoMaterial:
+          type: string
+          enum: [LibroFisico, LibroDigital, Revista, Tesis, Otro]
+          example: LibroFisico
+        totalCopias:
+          type: integer
+          example: 3
+        copiasDisponibles:
+          type: integer
+          example: 2
+
+    BookDetail:
+      type: object
+      required:
+        - libro
+        - ejemplares
+      properties:
+        libro:
+          $ref: '#/components/schemas/BookDto'
+        ejemplares:
+          type: array
+          items:
+            $ref: '#/components/schemas/EjemplarDto'
+
+    CreateBookDto:
+      type: object
+      required:
+        - titulo
+        - isbn
+        - autorId
+        - categoriaId
+        - editorialId
+        - fechaPublicacion
+        - idioma
+        - pais
+        - tipoMaterial
+      properties:
+        titulo:
+          type: string
+          example: Clean Architecture
+        isbn:
+          type: string
+          example: "9780134494166"
+        autorId:
+          type: integer
+          example: 1
+        categoriaId:
+          type: integer
+          example: 1
+        editorialId:
+          type: integer
+          example: 1
+        fechaPublicacion:
+          type: string
+          format: date
+          example: "2017-09-10"
+        idioma:
+          type: string
+          example: Español
+        pais:
+          type: string
+          example: Estados Unidos
+        tipoMaterial:
+          type: string
+          enum: [LibroFisico, LibroDigital, Revista, Tesis, Otro]
+          example: LibroFisico
+        autorNombre:
+          type: string
+          example: Robert C. Martin
+        editorialNombre:
+          type: string
+          example: Prentice Hall
+        categoriaNombre:
+          type: string
+          example: Dibujo Técnico
+
+    UpdateBookDto:
+      type: object
+      required:
+        - titulo
+        - isbn
+        - autorId
+        - categoriaId
+        - editorialId
+        - fechaPublicacion
+        - idioma
+        - pais
+        - tipoMaterial
+      properties:
+        titulo:
+          type: string
+          example: Clean Architecture
+        isbn:
+          type: string
+          example: "9780134494166"
+        autorId:
+          type: integer
+          example: 1
+        categoriaId:
+          type: integer
+          example: 1
+        editorialId:
+          type: integer
+          example: 1
+        fechaPublicacion:
+          type: string
+          format: date
+          example: "2017-09-10"
+        idioma:
+          type: string
+          example: Español
+        pais:
+          type: string
+          example: Estados Unidos
+        tipoMaterial:
+          type: string
+          enum: [LibroFisico, LibroDigital, Revista, Tesis, Otro]
+          example: LibroFisico
+
+    PaginatedBooks:
+      type: object
+      required:
+        - totalItems
+        - page
+        - pageSize
+        - totalPages
+        - items
+      properties:
+        totalItems:
+          type: integer
+          example: 100
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 10
+        totalPages:
+          type: integer
+          example: 10
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/BookDto'
+
+    EjemplarDto:
+      type: object
+      required:
+        - id
+        - libroId
+        - codigoBarras
+        - estado
+        - ubicacionFisica
+        - observaciones
+      properties:
+        id:
+          type: integer
+          example: 1
+        libroId:
+          type: integer
+          example: 1
+        codigoBarras:
+          type: string
+          example: "9780134494166-C1"
+        estado:
+          type: string
+          enum: [Disponible, Prestado, EnSala, Mantenimiento, Pérdida, Reservado]
+          example: Disponible
+        ubicacionFisica:
+          type: string
+          example: "Estante A - Fila 3"
+        observaciones:
+          type: string
+          example: "En perfectas condiciones"
+
+    CreateEjemplarDto:
+      type: object
+      required:
+        - codigoBarras
+        - ubicacionFisica
+        - observaciones
+      properties:
+        codigoBarras:
+          type: string
+          example: "9780134494166-C1"
+        ubicacionFisica:
+          type: string
+          example: "Estante A - Fila 3"
+        observaciones:
+          type: string
+          example: "En perfectas condiciones"
+
+    UpdateEjemplarDto:
+      type: object
+      required:
+        - estado
+        - ubicacionFisica
+        - observaciones
+      properties:
+        estado:
+          type: string
+          enum: [Disponible, Prestado, EnSala, Mantenimiento, Pérdida, Reservado]
+          example: Disponible
+        ubicacionFisica:
+          type: string
+          example: "Estante A - Fila 3"
+        observaciones:
+          type: string
+          example: "Desgaste leve en lomo"
+
+    AutorDto:
+      type: object
+      required:
+        - id
+        - nombre
+        - nacionalidad
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Robert C. Martin
+        nacionalidad:
+          type: string
+          example: Estadounidense
+
+    CreateAutorDto:
+      type: object
+      required:
+        - nombre
+        - nacionalidad
+      properties:
+        nombre:
+          type: string
+          example: Robert C. Martin
+        nacionalidad:
+          type: string
+          example: Estadounidense
+
+    CategoriaDto:
+      type: object
+      required:
+        - id
+        - nombre
+        - descripcion
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Ingeniería de Software
+        descripcion:
+          type: string
+          example: Obras relacionadas con el desarrollo y diseño de sistemas informáticos.
+
+    CreateCategoriaDto:
+      type: object
+      required:
+        - nombre
+        - descripcion
+      properties:
+        nombre:
+          type: string
+          example: Ingeniería de Software
+        descripcion:
+          type: string
+          example: Obras relacionadas con el desarrollo y diseño de sistemas informáticos.
+
+    EditorialDto:
+      type: object
+      required:
+        - id
+        - nombre
+      properties:
+        id:
+          type: integer
+          example: 1
+        nombre:
+          type: string
+          example: Prentice Hall
+
+    CreateEditorialDto:
+      type: object
+      required:
+        - nombre
+      properties:
+        nombre:
+          type: string
+          example: Prentice Hall
+
+    PrestamoDto:
+      type: object
+      required:
+        - id
+        - usuarioId
+        - usuarioNombre
+        - ejemplarId
+        - ejemplarCodigoBarras
+        - libroTitulo
+        - fechaSalida
+        - fechaMaxDevolucion
+        - fechaDevolucionEfectiva
+        - estado
+      properties:
+        id:
+          type: integer
+          example: 45
+        usuarioId:
+          type: integer
+          example: 10
+        usuarioNombre:
+          type: string
+          example: Juan Pérez
+        ejemplarId:
+          type: integer
+          example: 1
+        ejemplarCodigoBarras:
+          type: string
+          example: "9780134494166-C1"
+        libroTitulo:
+          type: string
+          example: Clean Architecture
+        fechaSalida:
+          type: string
+          format: date-time
+          example: "2026-07-05T08:00:00Z"
+        fechaMaxDevolucion:
+          type: string
+          format: date-time
+          example: "2026-07-12T08:00:00Z"
+        fechaDevolucionEfectiva:
+          type: string
+          format: date-time
+          nullable: true
+          example: null
+        estado:
+          type: string
+          enum: [Activo, Devuelto, Demorado]
+          example: Activo
+
+    RegistrarPrestamoDto:
+      type: object
+      required:
+        - usuarioId
+        - ejemplarId
+      properties:
+        usuarioId:
+          type: integer
+          example: 10
+        ejemplarId:
+          type: integer
+          example: 1
+        fechaDevolucion:
+          type: string
+          format: date-time
+          example: "2026-07-23T12:00:00Z"
+
+    ProcesarDevolucionDto:
+      type: object
+      required:
+        - codigoBarras
+        - estadoEntrega
+        - observaciones
+      properties:
+        codigoBarras:
+          type: string
+          example: "9780134494166-C1"
+        estadoEntrega:
+          type: string
+          enum: [Bueno, Dañado, Pérdida]
+          example: Bueno
+        observaciones:
+          type: string
+          example: "Retornado por ventanilla"
+
+    DevolucionResponseDto:
+      type: object
+      required:
+        - prestamoId
+        - fechaDevolucionEfectiva
+        - diasRetraso
+        - penalizacionAplicada
+        - nuevoEstadoEjemplar
+      properties:
+        prestamoId:
+          type: integer
+          example: 45
+        fechaDevolucionEfectiva:
+          type: string
+          format: date-time
+          example: "2026-07-13T10:00:00Z"
+        diasRetraso:
+          type: integer
+          example: 1
+        penalizacionAplicada:
+          type: boolean
+          example: true
+        sancion:
+          $ref: '#/components/schemas/SancionDto'
+        nuevoEstadoEjemplar:
+          type: string
+          enum: [Disponible, Reservado, Mantenimiento, Pérdida]
+          example: Reservado
+
+    ReservaDto:
+      type: object
+      required:
+        - id
+        - usuarioId
+        - usuarioNombre
+        - libroId
+        - libroTitulo
+        - fechaReserva
+        - posicionCola
+        - estado
+      properties:
+        id:
+          type: integer
+          example: 12
+        usuarioId:
+          type: integer
+          example: 10
+        usuarioNombre:
+          type: string
+          example: Juan Pérez
+        libroId:
+          type: integer
+          example: 1
+        libroTitulo:
+          type: string
+          example: Clean Architecture
+        fechaReserva:
+          type: string
+          format: date-time
+          example: "2026-07-13T12:00:00Z"
+        posicionCola:
+          type: integer
+          example: 1
+        estado:
+          type: string
+          enum: [Activa, Procesada, Cancelada, Vencida]
+          example: Activa
+
+    CrearReservaDto:
+      type: object
+      required:
+        - usuarioId
+        - libroId
+      properties:
+        usuarioId:
+          type: integer
+          example: 10
+        libroId:
+          type: integer
+          example: 1
+
+    SancionDto:
+      type: object
+      required:
+        - id
+        - usuarioId
+        - prestamoId
+        - fechaInicio
+        - fechaFin
+        - diasSancion
+        - estado
+      properties:
+        id:
+          type: integer
+          example: 22
+        usuarioId:
+          type: integer
+          example: 10
+        prestamoId:
+          type: integer
+          example: 45
+        fechaInicio:
+          type: string
+          format: date-time
+          example: "2026-07-13T10:00:00Z"
+        fechaFin:
+          type: string
+          format: date-time
+          example: "2026-07-15T10:00:00Z"
+        diasSancion:
+          type: integer
+          example: 2
+        estado:
+          type: string
+          enum: [Activa, Expirada, Levantada]
+          example: Activa
+
+    PaginatedPrestamos:
+      type: object
+      required:
+        - totalItems
+        - page
+        - pageSize
+        - totalPages
+        - items
+      properties:
+        totalItems:
+          type: integer
+          example: 50
+        page:
+          type: integer
+          example: 1
+        pageSize:
+          type: integer
+          example: 10
+        totalPages:
+          type: integer
+          example: 5
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/PrestamoDto'
+
+    ConfiguracionDto:
+      type: object
+      required:
+        - maxPrestamosAlumno
+        - maxPrestamosDocente
+        - maxPrestamosAdministrativo
+        - diasPrestamoDefecto
+        - diasSuspensionPorDiaRetraso
+        - horasGraciaReserva
+      properties:
+        maxPrestamosAlumno:
+          type: integer
+          example: 3
+        maxPrestamosDocente:
+          type: integer
+          example: 5
+        maxPrestamosAdministrativo:
+          type: integer
+          example: 3
+        diasPrestamoDefecto:
+          type: integer
+          example: 7
+        diasSuspensionPorDiaRetraso:
+          type: integer
+          example: 2
+        horasGraciaReserva:
+          type: integer
+          example: 48
+
+    EstadisticasDto:
+      type: object
+      required:
+        - totalEjemplares
+        - prestamosActivos
+        - tasaMorosidad
+        - usuariosBloqueados
+      properties:
+        totalEjemplares:
+          type: integer
+          example: 1240
+        prestamosActivos:
+          type: integer
+          example: 142
+        tasaMorosidad:
+          type: number
+          format: float
+          example: 4.2
+        usuariosBloqueados:
+          type: integer
+          example: 8
+
+    ReporteMasSolicitadoDto:
+      type: object
+      required:
+        - rank
+        - libroId
+        - titulo
+        - autorNombre
+        - totalPrestamos
+      properties:
+        rank:
+          type: integer
+          example: 1
+        libroId:
+          type: integer
+          example: 1
+        titulo:
+          type: string
+          example: Clean Architecture
+        autorNombre:
+          type: string
+          example: Robert C. Martin
+        totalPrestamos:
+          type: integer
+          example: 48
+
+    ReporteEjemplarProblemaDto:
+      type: object
+      required:
+        - ejemplarId
+        - codigoBarras
+        - libroTitulo
+        - estado
+        - observaciones
+        - ultimaFechaActualizacion
+      properties:
+        ejemplarId:
+          type: integer
+          example: 102
+        codigoBarras:
+          type: string
+          example: "9780134494166-C3"
+        libroTitulo:
+          type: string
+          example: Clean Architecture
+        estado:
+          type: string
+          enum: [Mantenimiento, Pérdida]
+          example: Mantenimiento
+        observaciones:
+          type: string
+          example: "Daño severo en portada"
+        ultimaFechaActualizacion:
+          type: string
+          format: date-time
+          example: "2026-07-10T15:30:00Z"
+
+    ReporteUsuarioMorosoDto:
+      type: object
+      required:
+        - usuarioId
+        - dni
+        - nombreCompleto
+        - email
+        - prestamosVencidosCount
+        - sancionesActivasCount
+        - estadoUsuario
+      properties:
+        usuarioId:
+          type: integer
+          example: 10
+        dni:
+          type: string
+          example: "71234567"
+        nombreCompleto:
+          type: string
+          example: Juan Pérez
+        email:
+          type: string
+          format: email
+          example: alumno@uni.edu.pe
+        prestamosVencidosCount:
+          type: integer
+          example: 1
+        sancionesActivasCount:
+          type: integer
+          example: 1
+        estadoUsuario:
+          type: string
+          example: BloqueoTemporal
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - title
+        - detail
+      properties:
+        code:
+          type: string
+          description: Código único de error empresarial (p. ej., ERR_USER_SANCTIONED, ERR_COPY_NOT_AVAILABLE, ERR_MAX_LOANS_EXCEEDED).
+          example: ERR_USER_SANCTIONED
+        title:
+          type: string
+          description: Nombre legible o categoría del error.
+          example: INFRACCIÓN DE REGLA DE NEGOCIO
+        detail:
+          type: string
+          description: Explicación detallada del error, apta para ser visualizada en la interfaz de usuario.
+          example: El alumno Juan Pérez cuenta con una sanción activa vigente hasta 23/07/2026.

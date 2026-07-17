@@ -1,0 +1,28 @@
+# Ignorar carpetas de compilación local y binarios
+**/bin/
+**/obj/
+
+# Ignorar archivos y carpetas del sistema de control de versiones y editores
+.git/
+.github/
+.vs/
+.vscode/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Ignorar pruebas y reportes de cobertura para evitar cargarlos al contexto de Docker
+tests/
+CoverageReport/
+cobertura de codigo/
+test-results/
+
+# Ignorar otros archivos innecesarios
+Dockerfile
+.dockerignore
+README.md
+LibriKeepPro.md
+nswag.json
+openapi.yaml
+dotnet-tools.json
