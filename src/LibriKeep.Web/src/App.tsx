@@ -656,20 +656,6 @@ function LoginScreen({ setCurrentUser, setActiveView, triggerSuccess, setGlobalE
     }
   };
 
-  // Cuentas rápidas de prueba
-  const fillCredentials = (role: 'lector' | 'bibliotecario' | 'admin') => {
-    if (role === 'lector') {
-      setEmail('alumno@uni.edu.pe');
-      setPassword('password');
-    } else if (role === 'bibliotecario') {
-      setEmail('maria.gomez@biblioteca.edu.pe');
-      setPassword('password');
-    } else {
-      setEmail('admin@librikeep.com');
-      setPassword('password');
-    }
-  };
-
   return (
     <div className="max-w-md w-full mx-auto mt-12 bg-card border border-border rounded-2xl shadow-xl overflow-hidden text-left animate-in fade-in duration-300">
       <div className="p-8 space-y-6">
@@ -714,30 +700,6 @@ function LoginScreen({ setCurrentUser, setActiveView, triggerSuccess, setGlobalE
             {loading ? 'Validando token JWT...' : 'Iniciar Sesión'}
           </button>
         </form>
-
-        <div className="border-t border-border pt-6">
-          <span className="text-[10px] font-bold text-text block uppercase tracking-wider mb-2 text-center">Acceso de Demostración Rápida</span>
-          <div className="grid grid-cols-3 gap-2">
-            <button 
-              onClick={() => fillCredentials('lector')}
-              className="px-2 py-1.5 bg-card hover:bg-border/20 border border-border rounded-lg text-[10px] font-bold text-primary tracking-wide transition text-center"
-            >
-              Lector (Mora)
-            </button>
-            <button 
-              onClick={() => fillCredentials('bibliotecario')}
-              className="px-2 py-1.5 bg-card hover:bg-border/20 border border-border rounded-lg text-[10px] font-bold text-primary tracking-wide transition text-center"
-            >
-              Bibliotecario
-            </button>
-            <button 
-              onClick={() => fillCredentials('admin')}
-              className="px-2 py-1.5 bg-card hover:bg-border/20 border border-border rounded-lg text-[10px] font-bold text-primary tracking-wide transition text-center"
-            >
-              Administrador
-            </button>
-          </div>
-        </div>
       </div>
     </div>
   );
