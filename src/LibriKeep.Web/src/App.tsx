@@ -632,8 +632,8 @@ function OpacScreen({ setGlobalError }: { setGlobalError: any }) {
 // PANTALLA B: Autenticación y Acceso Seguro (Login)
 // ==========================================
 function LoginScreen({ setCurrentUser, setActiveView, triggerSuccess, setGlobalError }: { setCurrentUser: any; setActiveView: any; triggerSuccess: any; setGlobalError: any }) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
