@@ -1,12 +1,12 @@
-import { 
+import {
   LoginResponse, PaginatedBooks, BookDetail, BookDto, EjemplarDto,
-  UsuarioDto, PrestamoDto, DevolucionResponseDto, ReservaDto, 
-  ConfiguracionDto, EstadisticasDto, ReporteMasSolicitadoDto, 
+  UsuarioDto, PrestamoDto, DevolucionResponseDto, ReservaDto,
+  ConfiguracionDto, EstadisticasDto, ReporteMasSolicitadoDto,
   ReporteEjemplarProblemaDto, ReporteUsuarioMorosoDto, ErrorResponse, SancionDto,
   PaginatedPrestamos, RolUsuario, TipoMiembro
 } from '../types/api';
 
-const BASE_URL = '/api';
+const BASE_URL = 'https://librikeeppro.onrender.com/api';
 
 export class ApiError extends Error {
   constructor(public status: number, public errorResponse: ErrorResponse) {
@@ -30,11 +30,11 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
   const token = localStorage.getItem('librikeep_token');
   const headers = new Headers(options.headers || {});
-  
+
   if (token) {
     headers.set('Authorization', `Bearer ${token}`);
   }
-  
+
   if (options.body && !(options.body instanceof FormData)) {
     headers.set('Content-Type', 'application/json');
   }
@@ -51,14 +51,14 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
         title: 'Error Inesperado',
         detail: `Ocurrió un error en el servidor (HTTP ${response.status}).`
       };
-      
+
       try {
         const json = await response.json();
         if (json.code) errResp = json;
       } catch {
         // Ignorar fallo de parseo
       }
-      
+
       throw new ApiError(response.status, errResp);
     }
 
@@ -71,7 +71,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
     if (error instanceof ApiError) {
       throw error;
     }
-    
+
     console.warn("Servidor inalcanzable. Activando modo simulación (Mock Data)...");
     useMockData = true;
     return getMockResponse<T>(path, options);
@@ -80,7 +80,7 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
 
 export const apiClient = {
   auth: {
-    login: (email: string, password: string) => 
+    login: (email: string, password: string) =>
       request<LoginResponse>('/auth/login', {
         method: 'POST',
         body: JSON.stringify({ email, password })
@@ -320,10 +320,10 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
     const { email } = JSON.parse(options.body as string);
     const isLibrarian = email.includes('bibliotecario');
     const isAdmin = email.includes('admin');
-    
+
     const rol: RolUsuario = isAdmin ? 'Administrador' : (isLibrarian ? 'Bibliotecario' : 'Lector');
     const tipo: TipoMiembro = isLibrarian ? 'Bibliotecario' : 'Alumno';
-    
+
     return {
       token: "mock-jwt-token-token",
       usuario: {
@@ -396,7 +396,7 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
   if (url === '/circulacion/prestamos') {
     if (options.method === 'POST') {
       const { usuarioId, ejemplarId } = JSON.parse(options.body as string);
-      
+
       // Simular validación RN-02 y lanzar error para el modal H si el usuario es deudor (ID 10)
       if (usuarioId === 10) {
         throw new ApiError(400, {
@@ -430,7 +430,7 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
   if (url === '/circulacion/devoluciones') {
     const { codigoBarras, estadoEntrega } = JSON.parse(options.body as string);
     const isLate = codigoBarras === '9780132350884-C1'; // Clean Code es el atrasado en mock
-    
+
     return {
       prestamoId: isLate ? 102 : 101,
       fechaDevolucionEfectiva: new Date().toISOString(),
