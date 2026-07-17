@@ -23,6 +23,10 @@ RUN dotnet publish src/LibriKeep.Presentation.API/LibriKeep.Presentation.API.csp
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
 WORKDIR /app
 
+# Instalar librería para soporte de Kerberos/GSSAPI requerida por PostgreSQL
+USER root
+RUN apt-get update && apt-get install -y libgssapi-krb5-2 && rm -rf /var/lib/apt/lists/*
+
 # Exponer el puerto 8080 para Render
 EXPOSE 8080
 
@@ -35,3 +39,4 @@ COPY --from=build-env /app/out .
 
 # Punto de entrada apuntando a la DLL principal de la API
 ENTRYPOINT ["dotnet", "LibriKeep.Presentation.API.dll"]
+
