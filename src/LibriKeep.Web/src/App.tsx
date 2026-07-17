@@ -673,6 +673,7 @@ function LoginScreen({ setCurrentUser, setActiveView, triggerSuccess, setGlobalE
             <input 
               type="email" 
               required
+              autoComplete="username"
               placeholder="alumno@uni.edu.pe"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -685,6 +686,7 @@ function LoginScreen({ setCurrentUser, setActiveView, triggerSuccess, setGlobalE
             <input 
               type="password" 
               required
+              autoComplete="current-password"
               placeholder="*************"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
