@@ -58,7 +58,7 @@ namespace LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo
                 
                 // Realizamos validaciones sobre la entidad Usuario
                 usuario.ValidarCapacidadCirculacion(DateTime.UtcNow);
-                usuario.ValidarLmitePrestamos(); // Verifica cantidad acumulada en memoria / base de datos
+                usuario.ValidarLmitePrestamos(activeLoansCount); // Verifica cantidad acumulada en base de datos
 
                 // RN-01: Control de Estados Invariables del Activo (Ejemplar)
                 ejemplar.Prestar(); // Lanza DomainException si no está Disponible

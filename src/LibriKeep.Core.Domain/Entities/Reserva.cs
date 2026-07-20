@@ -25,7 +25,7 @@ namespace LibriKeep.Core.Domain.Entities
         {
             UsuarioId = usuarioId;
             LibroId = libroId;
-            FechaReserva = fechaReserva;
+            FechaReserva = fechaReserva.Kind == DateTimeKind.Utc ? fechaReserva : DateTime.SpecifyKind(fechaReserva, DateTimeKind.Utc);
             PosicionCola = posicionCola;
             Estado = EstadoReserva.Activa;
         }

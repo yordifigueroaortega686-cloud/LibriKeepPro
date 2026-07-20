@@ -26,9 +26,9 @@ namespace LibriKeep.Core.Domain.Entities
         {
             UsuarioId = usuarioId;
             PrestamoId = prestamoId;
-            FechaInicio = fechaInicio;
+            FechaInicio = fechaInicio.Kind == DateTimeKind.Utc ? fechaInicio : DateTime.SpecifyKind(fechaInicio, DateTimeKind.Utc);
             DiasSancion = diasSancion;
-            FechaFin = fechaInicio.AddDays(diasSancion);
+            FechaFin = FechaInicio.AddDays(diasSancion);
             Estado = EstadoSancion.Activa;
         }
 

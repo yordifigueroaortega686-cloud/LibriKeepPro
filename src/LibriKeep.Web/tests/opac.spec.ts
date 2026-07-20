@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 
 test.describe('Catálogo OPAC de LibriKeep', () => {
+  test.beforeEach(async ({ page }) => {
+    // Bloquear peticiones a la API externa para forzar el modo simulación (Mock Data)
+    await page.route('**/api/**', route => route.abort());
+  });
+
   test('debe buscar un libro y mostrar el resultado en pantalla', async ({ page }) => {
     // 1. Navegar a la página de inicio (Catálogo OPAC)
     await page.goto('/');

@@ -139,9 +139,20 @@ namespace LibriKeep.Infrastructure.Persistence.Repositories
                 .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
         }
 
+        public async Task<Libro?> GetByIsbnAsync(string isbn, CancellationToken cancellationToken = default)
+        {
+            return await _context.Libros
+                .FirstOrDefaultAsync(l => l.Isbn == isbn, cancellationToken);
+        }
+
         public async Task<bool> AnyAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Libros.AnyAsync(l => l.Id == id, cancellationToken);
+        }
+
+        public async Task AddAsync(Libro libro, CancellationToken cancellationToken = default)
+        {
+            await _context.Libros.AddAsync(libro, cancellationToken);
         }
     }
 

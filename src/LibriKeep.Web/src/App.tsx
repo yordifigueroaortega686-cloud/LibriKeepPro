@@ -1455,21 +1455,29 @@ function CatalogingScreen({ setGlobalError, triggerSuccess }: { setGlobalError: 
   const [autorNombre, setAutorNombre] = useState('');
   const [editorialNombre, setEditorialNombre] = useState('');
   const [categories, setCategories] = useState<any[]>([]);
+  const [autores, setAutores] = useState<any[]>([]);
+  const [editoriales, setEditoriales] = useState<any[]>([]);
   const [categorySearch, setCategorySearch] = useState('');
   const [showCategoryDropdown, setShowCategoryDropdown] = useState(false);
   const [copias, setCopias] = useState(1);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const loadCategories = async () => {
+    const loadMetadata = async () => {
       try {
-        const list = await apiClient.cataloging.getCategorias();
-        setCategories(list);
+        const [cats, auts, eds] = await Promise.all([
+          apiClient.cataloging.getCategorias().catch(() => []),
+          apiClient.cataloging.getAutores().catch(() => []),
+          apiClient.cataloging.getEditoriales().catch(() => [])
+        ]);
+        if (Array.isArray(cats) && cats.length > 0) setCategories(cats);
+        if (Array.isArray(auts) && auts.length > 0) setAutores(auts);
+        if (Array.isArray(eds) && eds.length > 0) setEditoriales(eds);
       } catch (e) {
-        // Fallback en caso de error
+        // Fallback defensivo
       }
     };
-    loadCategories();
+    loadMetadata();
   }, []);
 
   const filteredCategories = categories.filter(c => 
@@ -1480,16 +1488,27 @@ function CatalogingScreen({ setGlobalError, triggerSuccess }: { setGlobalError: 
     e.preventDefault();
     setLoading(true);
     try {
-      const matchedCategory = categories.find(c => c.nombre.toLowerCase() === categorySearch.trim().toLowerCase());
+      const cleanAutor = autorNombre.trim();
+      const cleanEditorial = editorialNombre.trim();
+      const cleanCat = categorySearch.trim();
+
+      const matchedCategory = categories.find(c => c.nombre.toLowerCase() === cleanCat.toLowerCase());
+      const matchedAutor = autores.find(a => a.nombre.toLowerCase() === cleanAutor.toLowerCase());
+      const matchedEditorial = editoriales.find(ed => ed.nombre.toLowerCase() === cleanEditorial.toLowerCase());
+
+      const validAutorId = matchedAutor ? matchedAutor.id : (autores[0]?.id || 1);
+      const validCategoriaId = matchedCategory ? matchedCategory.id : (categories[0]?.id || 1);
+      const validEditorialId = matchedEditorial ? matchedEditorial.id : (editoriales[0]?.id || 1);
+
       const book = await apiClient.cataloging.createBook({
-        titulo,
-        isbn,
-        autorId: 1, // Fallback en BD, se resolverá por autorNombre
-        categoriaId: matchedCategory ? matchedCategory.id : 1,
-        editorialId: 1, // Fallback en BD, se resolverá por editorialNombre
-        autorNombre: autorNombre.trim(),
-        editorialNombre: editorialNombre.trim(),
-        categoriaNombre: matchedCategory ? undefined : categorySearch.trim(),
+        titulo: titulo.trim(),
+        isbn: isbn.trim(),
+        autorId: validAutorId,
+        categoriaId: validCategoriaId,
+        editorialId: validEditorialId,
+        autorNombre: matchedAutor ? undefined : (cleanAutor || undefined),
+        editorialNombre: matchedEditorial ? undefined : (cleanEditorial || undefined),
+        categoriaNombre: matchedCategory ? undefined : (cleanCat || undefined),
         fechaPublicacion: new Date().toISOString().split('T')[0],
         idioma: 'Español',
         pais: 'Perú',
@@ -1498,7 +1517,7 @@ function CatalogingScreen({ setGlobalError, triggerSuccess }: { setGlobalError: 
 
       // Crear las copias físicas asociadas
       for (let i = 1; i <= copias; i++) {
-        await apiClient.cataloging.createEjemplar(book.id, `${isbn}-C${i}`, `Estante A-${i}`, 'Bueno');
+        await apiClient.cataloging.createEjemplar(book.id, `${isbn.trim()}-C${i}`, `Estante A-${i}`, 'Bueno');
       }
 
       triggerSuccess(`Obra ingresada correctamente. Se generaron ${copias} ejemplares con códigos de barra de auditoría.`);

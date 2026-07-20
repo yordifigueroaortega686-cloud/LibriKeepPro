@@ -6,7 +6,7 @@ import {
   PaginatedPrestamos, RolUsuario, TipoMiembro
 } from '../types/api';
 
-const BASE_URL = 'https://librikeeppro.onrender.com/api';
+const BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
 export class ApiError extends Error {
   constructor(public status: number, public errorResponse: ErrorResponse) {
@@ -278,6 +278,17 @@ const mockUsersList: UsuarioDto[] = [
     rol: "Lector",
     estado: "BloqueoTemporal",
     password: "password"
+  },
+  {
+    id: 99,
+    dni: "99999999",
+    nombreCompleto: "Lector Limite Excedido",
+    email: "limite@uni.edu.pe",
+    telefono: "+51999555444",
+    tipoMiembro: "Alumno",
+    rol: "Lector",
+    estado: "Activo",
+    password: "password"
   }
 ];
 
@@ -317,7 +328,17 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
   }
 
   if (url === '/auth/login') {
-    const { email } = JSON.parse(options.body as string);
+    const { email, password } = JSON.parse(options.body as string);
+    
+    // Simular error de credenciales incorrectas
+    if (email === 'error@librikeep.com' || password === 'wrong-password') {
+      throw new ApiError(401, {
+        code: "ERR_AUTH_FAILED",
+        title: "Fallo de Autenticación",
+        detail: "Usuario o contraseña incorrectos."
+      });
+    }
+
     const isLibrarian = email.includes('bibliotecario');
     const isAdmin = email.includes('admin');
 
@@ -379,6 +400,14 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
     } as unknown as T;
   }
 
+  if (url === '/categorias') {
+    return [
+      { id: 1, nombre: "Ingeniería de Software", descripcion: "Desarrollo de software" },
+      { id: 2, nombre: "Seguridad de la Información", descripcion: "Ciberseguridad" },
+      { id: 3, nombre: "Algoritmos y Estructuras", descripcion: "Estructuras de datos" }
+    ] as unknown as T;
+  }
+
   if (url === '/usuarios/10/sanciones') {
     return [
       {
@@ -406,17 +435,55 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
         });
       }
 
-      return {
+      // Simular validación RN-03: Límite máximo de préstamos activos
+      if (usuarioId === 99) {
+        throw new ApiError(400, {
+          code: "ERR_LOAN_LIMIT_EXCEEDED",
+          title: "Infracción de Regla de Negocio",
+          detail: "El usuario ha alcanzado el límite máximo de préstamos activos permitidos (RN-03)."
+        });
+      }
+
+      // Encontrar el ejemplar, validar RN-01 (disponibilidad) y cambiar su estado a "Prestado"
+      let foundBarcode = "BARCODE-OK";
+      let foundTitle = "Libro Seleccionado";
+      
+      for (const bookId of Object.keys(mockEjemplares)) {
+        const list = mockEjemplares[parseInt(bookId)];
+        const e = list.find(x => x.id === ejemplarId);
+        if (e) {
+          if (e.estado !== 'Disponible') {
+            throw new ApiError(400, {
+              code: "ERR_COPY_NOT_AVAILABLE",
+              title: "Infracción de Regla de Negocio",
+              detail: `El ejemplar con código de barras ${e.codigoBarras} no se encuentra disponible (Estado actual: ${e.estado}).`
+            });
+          }
+          e.estado = "Prestado";
+          foundBarcode = e.codigoBarras;
+          const book = mockBooks.find(b => b.id === e.libroId);
+          if (book) {
+            foundTitle = book.titulo;
+            if (book.copiasDisponibles > 0) book.copiasDisponibles--;
+          }
+          break;
+        }
+      }
+
+      const newLoan: PrestamoDto = {
         id: Math.floor(Math.random() * 1000),
         usuarioId,
-        usuarioNombre: "Usuario Registrado",
+        usuarioNombre: usuarioId === 5 ? "María Gómez (Bibliotecaria)" : "Usuario Registrado",
         ejemplarId,
-        ejemplarCodigoBarras: "BARCODE-OK",
-        libroTitulo: "Libro Seleccionado",
+        ejemplarCodigoBarras: foundBarcode,
+        libroTitulo: foundTitle,
         fechaSalida: new Date().toISOString(),
         fechaMaxDevolucion: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString(),
         estado: "Activo"
-      } as unknown as T;
+      };
+
+      mockLoans.push(newLoan);
+      return newLoan as unknown as T;
     }
     return {
       totalItems: mockLoans.length,
@@ -431,8 +498,33 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
     const { codigoBarras, estadoEntrega } = JSON.parse(options.body as string);
     const isLate = codigoBarras === '9780132350884-C1'; // Clean Code es el atrasado en mock
 
+    // Encontrar el ejemplar y cambiar su estado en mock data
+    let targetBookId = 0;
+    for (const bookId of Object.keys(mockEjemplares)) {
+      const list = mockEjemplares[parseInt(bookId)];
+      const e = list.find(x => x.codigoBarras === codigoBarras);
+      if (e) {
+        e.estado = estadoEntrega === 'Bueno' ? 'Disponible' : (estadoEntrega === 'Dañado' ? 'Mantenimiento' : 'Pérdida');
+        targetBookId = e.libroId;
+        break;
+      }
+    }
+    
+    if (targetBookId > 0 && estadoEntrega === 'Bueno') {
+      const book = mockBooks.find(b => b.id === targetBookId);
+      if (book) {
+        book.copiasDisponibles = (book.copiasDisponibles || 0) + 1;
+      }
+    }
+
+    // Encontrar y cerrar el préstamo correspondiente en mockLoans
+    const loan = mockLoans.find(l => l.ejemplarCodigoBarras === codigoBarras && l.estado === 'Activo');
+    if (loan) {
+      loan.estado = 'Devuelto';
+    }
+
     return {
-      prestamoId: isLate ? 102 : 101,
+      prestamoId: isLate ? 102 : (loan ? loan.id : 101),
       fechaDevolucionEfectiva: new Date().toISOString(),
       diasRetraso: isLate ? 5 : 0,
       penalizacionAplicada: isLate,
@@ -451,18 +543,61 @@ function getMockResponse<T>(path: string, options: RequestInit): T {
 
   if (url === '/libros') {
     const body = JSON.parse(options.body as string);
-    return {
-      id: Math.floor(Math.random() * 100) + 10,
+
+    // Validar formato del ISBN (RN-1.3)
+    if (body.isbn.length < 10 || isNaN(Number(body.isbn))) {
+      throw new ApiError(400, {
+        code: "ERR_INVALID_ISBN",
+        title: "Error de Ingesta",
+        detail: "El formato del ISBN ingresado no es válido o contiene caracteres alfabéticos (RN-1.3)."
+      });
+    }
+
+    const newBook: BookDto = {
+      id: Math.floor(Math.random() * 1000) + 100,
       titulo: body.titulo,
       isbn: body.isbn,
-      autor: { id: body.autorId || 1, nombre: "Robert C. Martin" },
-      categoria: { id: body.categoriaId || 1, nombre: "Ingeniería" },
-      editorial: { id: body.editorialId || 1, nombre: "Editorial" },
-      fechaPublicacion: body.fechaPublicacion,
+      autor: { id: body.autorId || 1, nombre: body.autorNombre || "Robert C. Martin", nacionalidad: "Estadounidense" },
+      categoria: { id: body.categoriaId || 1, nombre: body.categoriaNombre || "Ingeniería de Software", descripcion: "Desarrollo de software" },
+      editorial: { id: body.editorialId || 1, nombre: body.editorialNombre || "Editorial" },
+      fechaPublicacion: body.fechaPublicacion || new Date().toISOString().split('T')[0],
+      idioma: "Español",
+      pais: "Perú",
       tipoMaterial: body.tipoMaterial || "LibroFisico",
-      totalCopias: 1,
-      copiasDisponibles: 1
-    } as unknown as T;
+      totalCopias: 0,
+      copiasDisponibles: 0
+    };
+    mockBooks.push(newBook);
+    return newBook as unknown as T;
+  }
+
+  if (url.startsWith('/libros/') && url.endsWith('/ejemplares')) {
+    const segments = url.split('/');
+    const libroId = parseInt(segments[2]);
+    const { codigoBarras, ubicacionFisica, observaciones } = JSON.parse(options.body as string);
+
+    const newEjemplar: EjemplarDto = {
+      id: Math.floor(Math.random() * 10000),
+      libroId,
+      codigoBarras,
+      estado: "Disponible",
+      ubicacionFisica,
+      observaciones
+    };
+
+    if (!mockEjemplares[libroId]) {
+      mockEjemplares[libroId] = [];
+    }
+    mockEjemplares[libroId].push(newEjemplar);
+
+    // Actualizar conteos de copias en el libro
+    const book = mockBooks.find(b => b.id === libroId);
+    if (book) {
+      book.totalCopias = (book.totalCopias || 0) + 1;
+      book.copiasDisponibles = (book.copiasDisponibles || 0) + 1;
+    }
+
+    return newEjemplar as unknown as T;
   }
 
   if (url === '/reportes/estadisticas') {

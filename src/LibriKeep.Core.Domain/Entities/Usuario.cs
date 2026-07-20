@@ -121,10 +121,10 @@ namespace LibriKeep.Core.Domain.Entities
             }
         }
 
-        public void ValidarLmitePrestamos()
+        public void ValidarLmitePrestamos(int? activeCountOverride = null)
         {
             // RN-03: Límites Máximos y Cuotas de Préstamos Activos
-            int prestamosActivosCount = Prestamos.Count(p => p.Estado == EstadoPrestamo.Activo || p.Estado == EstadoPrestamo.Demorado);
+            int prestamosActivosCount = activeCountOverride ?? Prestamos.Count(p => p.Estado == EstadoPrestamo.Activo || p.Estado == EstadoPrestamo.Demorado);
             int maxPermitidos = GetMaxPrestamosPermitidos();
 
             if (prestamosActivosCount >= maxPermitidos)

@@ -27,8 +27,8 @@ namespace LibriKeep.Core.Domain.Entities
         {
             UsuarioId = usuarioId;
             EjemplarId = ejemplarId;
-            FechaSalida = fechaSalida;
-            FechaMaxDevolucion = fechaSalida.AddDays(diasPrestamoDefault);
+            FechaSalida = fechaSalida.Kind == DateTimeKind.Utc ? fechaSalida : DateTime.SpecifyKind(fechaSalida, DateTimeKind.Utc);
+            FechaMaxDevolucion = FechaSalida.AddDays(diasPrestamoDefault);
             Estado = EstadoPrestamo.Activo;
         }
 
@@ -36,8 +36,8 @@ namespace LibriKeep.Core.Domain.Entities
         {
             UsuarioId = usuarioId;
             EjemplarId = ejemplarId;
-            FechaSalida = fechaSalida;
-            FechaMaxDevolucion = fechaMaxDevolucion;
+            FechaSalida = fechaSalida.Kind == DateTimeKind.Utc ? fechaSalida : DateTime.SpecifyKind(fechaSalida, DateTimeKind.Utc);
+            FechaMaxDevolucion = fechaMaxDevolucion.Kind == DateTimeKind.Utc ? fechaMaxDevolucion : DateTime.SpecifyKind(fechaMaxDevolucion, DateTimeKind.Utc);
             Estado = EstadoPrestamo.Activo;
         }
 
@@ -48,7 +48,7 @@ namespace LibriKeep.Core.Domain.Entities
                 throw new DomainException("ERR_LOAN_ALREADY_RETURNED", "El préstamo no está activo y ya ha sido devuelto.");
             }
 
-            FechaDevolucionEfectiva = fechaDevolucionEfectiva;
+            FechaDevolucionEfectiva = fechaDevolucionEfectiva.Kind == DateTimeKind.Utc ? fechaDevolucionEfectiva : DateTime.SpecifyKind(fechaDevolucionEfectiva, DateTimeKind.Utc);
             Estado = EstadoPrestamo.Devuelto;
 
             // Actualizar el estado físico del ejemplar (RN-05)

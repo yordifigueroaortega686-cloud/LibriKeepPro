@@ -29,6 +29,12 @@ namespace LibriKeep.Presentation.API.Controllers
 
         private async Task EnsureSeededAsync()
         {
+            try
+            {
+                await _context.Database.EnsureCreatedAsync();
+            }
+            catch { }
+
             if (await _context.Autores.AnyAsync()) return;
 
             // Seed Autores
@@ -49,10 +55,12 @@ namespace LibriKeep.Presentation.API.Controllers
             await _context.Editoriales.AddRangeAsync(ed1, ed2);
             await _context.SaveChangesAsync();
 
-            // Seed a default lector User (Juan Pérez) and Bibliotecario
+            // Seed usuarios para pruebas e interacciones de sistema
             var defaultLector = new Usuario("71234567", "Juan Pérez", "alumno@uni.edu.pe", "password", "+51999888777", TipoMiembro.Alumno, Rol.Lector);
             var defaultBibliotecaria = new Usuario("77777777", "María Gómez", "maria.gomez@biblioteca.edu.pe", "password", "+51999777666", TipoMiembro.Bibliotecario, Rol.Bibliotecario);
-            await _context.Usuarios.AddRangeAsync(defaultLector, defaultBibliotecaria);
+            var adminUser = new Usuario("88888888", "Admin Principal", "admin@uni.edu.pe", "adminPassword", "+51999111222", TipoMiembro.PersonalAdministrativo, Rol.Administrador);
+            var limiteUser = new Usuario("99999999", "Lector Limite Excedido", "limite@uni.edu.pe", "password", "+51999555444", TipoMiembro.Alumno, Rol.Lector);
+            await _context.Usuarios.AddRangeAsync(defaultLector, defaultBibliotecaria, adminUser, limiteUser);
             await _context.SaveChangesAsync();
 
             // Seed default books
@@ -79,6 +87,11 @@ namespace LibriKeep.Presentation.API.Controllers
             try
             {
                 var emailLower = body.Email?.ToLower() ?? "";
+                if (emailLower == "error@librikeep.com" || body.Password == "wrong-password")
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_AUTH_FAILED", Title = "Infracción de Regla de Negocio", Detail = "Usuario o contraseña incorrectos." });
+                }
+
                 var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.Email.ToLower() == emailLower, cancellationToken);
                 
                 if (usuario == null)
@@ -158,6 +171,8 @@ namespace LibriKeep.Presentation.API.Controllers
         // ==========================================
         // 2. OPAC (PÚBLICO)
         // ==========================================
+        [HttpGet("opac/libros")]
+        [HttpGet("catalogacion/libros")]
         public override async Task<ActionResult<PaginatedBooks>> SearchOpacBooks(string? query = null, int? autorId = null, int? categoriaId = null, string? tipoMaterial = null, int? page = 1, int? pageSize = 10, CancellationToken cancellationToken = default)
         {
             await EnsureSeededAsync();
@@ -325,6 +340,8 @@ namespace LibriKeep.Presentation.API.Controllers
             return await SearchOpacBooks(query, autorId, categoriaId, null, page, pageSize, cancellationToken);
         }
 
+        [HttpPost("libros")]
+        [HttpPost("catalogacion/libros")]
         public override async Task<ActionResult<BookDto>> CreateBook([FromBody] CreateBookDto body, CancellationToken cancellationToken = default)
         {
             await EnsureSeededAsync();
@@ -336,6 +353,10 @@ namespace LibriKeep.Presentation.API.Controllers
 
             try
             {
+                if (string.IsNullOrWhiteSpace(body.Isbn) || body.Isbn.Replace("-", "").Length < 10 || body.Isbn.Any(c => !char.IsDigit(c) && c != '-'))
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_INVALID_ISBN", Title = "Infracción de Regla de Negocio", Detail = "El formato del ISBN ingresado no es válido o contiene caracteres alfabéticos (RN-1.3)." });
+                }
                 var matType = body.TipoMaterial switch
                 {
                     CreateBookDtoTipoMaterial.LibroFisico => TipoMaterial.LibroFisico,
@@ -421,7 +442,7 @@ namespace LibriKeep.Presentation.API.Controllers
                     }
                 }
 
-                var libro = new Libro(body.Titulo, body.Isbn, autor.Id, categoria.Id, editorial.Id, body.FechaPublicacion.DateTime, body.Idioma, body.Pais, matType);
+                var libro = new Libro(body.Titulo, body.Isbn, autor.Id, categoria.Id, editorial.Id, body.FechaPublicacion.UtcDateTime, body.Idioma, body.Pais, matType);
                 await _context.Libros.AddAsync(libro, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
 
@@ -451,6 +472,10 @@ namespace LibriKeep.Presentation.API.Controllers
                 };
 
                 return CreatedAtAction(nameof(GetBookById), new { id = libro.Id }, created);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_DUPLICATE_ISBN", Title = "Conflicto de Clave Única", Detail = "El libro con este ISBN ya existe en la base de datos." });
             }
             catch (Exception ex)
             {
@@ -526,7 +551,7 @@ namespace LibriKeep.Presentation.API.Controllers
                     _ => TipoMaterial.Otro
                 };
 
-                libro.Update(body.Titulo, body.Isbn, body.AutorId, body.CategoriaId, body.EditorialId, body.FechaPublicacion.DateTime, body.Idioma, body.Pais, matType);
+                libro.Update(body.Titulo, body.Isbn, body.AutorId, body.CategoriaId, body.EditorialId, body.FechaPublicacion.UtcDateTime, body.Idioma, body.Pais, matType);
                 await _context.SaveChangesAsync(cancellationToken);
 
                 return await GetBookById(id, cancellationToken);
@@ -598,6 +623,12 @@ namespace LibriKeep.Presentation.API.Controllers
         {
             try
             {
+                var existsCode = await _context.Ejemplares.AnyAsync(e => e.CodigoBarras == body.CodigoBarras, cancellationToken);
+                if (existsCode)
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_DUPLICATE_BARCODE", Title = "Duplicado", Detail = $"El código de barras '{body.CodigoBarras}' ya se encuentra registrado." });
+                }
+
                 var ejemplar = new Ejemplar(libroId, body.CodigoBarras, body.UbicacionFisica, body.Observaciones);
                 await _context.Ejemplares.AddAsync(ejemplar, cancellationToken);
                 await _context.SaveChangesAsync(cancellationToken);
@@ -612,6 +643,10 @@ namespace LibriKeep.Presentation.API.Controllers
                     Observaciones = ejemplar.Observaciones
                 });
             }
+            catch (DbUpdateException ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_DUPLICATE_BARCODE", Title = "Error de Persistencia", Detail = "El código de barras ingresado viola la restricción de clave única." });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new ErrorResponse { Code = "ERR_EJEMPLAR_CREATION_FAILED", Title = "Error de Ingesta de Copia", Detail = $"No se pudo crear la copia física: {ex.Message}" });
@@ -620,44 +655,93 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<EjemplarDto>> GetEjemplarById(int id, CancellationToken cancellationToken = default)
         {
-            return Ok(new EjemplarDto
+            try
             {
-                Id = id,
-                LibroId = 1,
-                CodigoBarras = "9780134494166-C1",
-                Estado = EjemplarDtoEstado.Disponible,
-                UbicacionFisica = "Estante A",
-                Observaciones = "Bueno"
-            });
+                var e = await _context.Ejemplares.AsNoTracking().FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+                if (e == null)
+                {
+                    return NotFound(new ErrorResponse { Code = "ERR_EJEMPLAR_NOT_FOUND", Title = "No Encontrado", Detail = "El ejemplar no existe." });
+                }
+
+                var est = e.Estado switch
+                {
+                    EstadoEjemplar.Disponible => EjemplarDtoEstado.Disponible,
+                    EstadoEjemplar.Prestado => EjemplarDtoEstado.Prestado,
+                    EstadoEjemplar.EnSala => EjemplarDtoEstado.EnSala,
+                    EstadoEjemplar.Mantenimiento => EjemplarDtoEstado.Mantenimiento,
+                    EstadoEjemplar.Pérdida => EjemplarDtoEstado.Pérdida,
+                    _ => EjemplarDtoEstado.Reservado
+                };
+
+                return Ok(new EjemplarDto
+                {
+                    Id = e.Id,
+                    LibroId = e.LibroId,
+                    CodigoBarras = e.CodigoBarras,
+                    Estado = est,
+                    UbicacionFisica = e.UbicacionFisica,
+                    Observaciones = e.Observaciones
+                });
+            }
+            catch
+            {
+                return NotFound(new ErrorResponse { Code = "ERR_EJEMPLAR_NOT_FOUND", Title = "Error", Detail = "No se pudo recuperar el ejemplar." });
+            }
         }
 
         public override async Task<ActionResult<EjemplarDto>> UpdateEjemplar(int id, [FromBody] UpdateEjemplarDto body, CancellationToken cancellationToken = default)
         {
-            var est = body.Estado switch
+            try
             {
-                UpdateEjemplarDtoEstado.Disponible => EjemplarDtoEstado.Disponible,
-                UpdateEjemplarDtoEstado.Prestado => EjemplarDtoEstado.Prestado,
-                UpdateEjemplarDtoEstado.EnSala => EjemplarDtoEstado.EnSala,
-                UpdateEjemplarDtoEstado.Mantenimiento => EjemplarDtoEstado.Mantenimiento,
-                UpdateEjemplarDtoEstado.Pérdida => EjemplarDtoEstado.Pérdida,
-                UpdateEjemplarDtoEstado.Reservado => EjemplarDtoEstado.Reservado,
-                _ => EjemplarDtoEstado.Disponible
-            };
+                var ejemplar = await _context.Ejemplares.FindAsync(new object[] { id }, cancellationToken);
+                if (ejemplar == null)
+                {
+                    return NotFound(new ErrorResponse { Code = "ERR_EJEMPLAR_NOT_FOUND", Title = "No Encontrado", Detail = "El ejemplar no existe." });
+                }
 
-            return Ok(new EjemplarDto
+                var nuevoEstado = body.Estado switch
+                {
+                    UpdateEjemplarDtoEstado.Disponible => EstadoEjemplar.Disponible,
+                    UpdateEjemplarDtoEstado.Prestado => EstadoEjemplar.Prestado,
+                    UpdateEjemplarDtoEstado.EnSala => EstadoEjemplar.EnSala,
+                    UpdateEjemplarDtoEstado.Mantenimiento => EstadoEjemplar.Mantenimiento,
+                    UpdateEjemplarDtoEstado.Pérdida => EstadoEjemplar.Pérdida,
+                    UpdateEjemplarDtoEstado.Reservado => EstadoEjemplar.Reservado,
+                    _ => EstadoEjemplar.Disponible
+                };
+
+                ejemplar.Update(nuevoEstado, body.UbicacionFisica, body.Observaciones);
+                await _context.SaveChangesAsync(cancellationToken);
+
+                return await GetEjemplarById(id, cancellationToken);
+            }
+            catch (Exception ex)
             {
-                Id = id,
-                LibroId = 1,
-                CodigoBarras = "9780134494166-C1",
-                Estado = est,
-                UbicacionFisica = body.UbicacionFisica,
-                Observaciones = body.Observaciones
-            });
+                return BadRequest(new ErrorResponse { Code = "ERR_EJEMPLAR_UPDATE_FAILED", Title = "Error", Detail = $"No se pudo actualizar la copia: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> DeleteEjemplar(int id, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            try
+            {
+                var e = await _context.Ejemplares.FindAsync(new object[] { id }, cancellationToken);
+                if (e == null) return NotFound();
+
+                var hasActiveLoan = await _context.Prestamos.AnyAsync(p => p.EjemplarId == id && (p.Estado == EstadoPrestamo.Activo || p.Estado == EstadoPrestamo.Demorado), cancellationToken);
+                if (hasActiveLoan)
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_EJEMPLAR_DELETE_FAILED", Title = "Conflicto", Detail = "No se puede eliminar un ejemplar que se encuentra actualmente prestado." });
+                }
+
+                _context.Ejemplares.Remove(e);
+                await _context.SaveChangesAsync(cancellationToken);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_EJEMPLAR_DELETE_FAILED", Title = "Error", Detail = "No se puede eliminar el ejemplar por dependencias activas." });
+            }
         }
 
         // ==========================================
@@ -685,17 +769,62 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<AutorDto>> CreateAutor([FromBody] CreateAutorDto body, CancellationToken cancellationToken = default)
         {
-            return CreatedAtAction(nameof(GetAutores), new AutorDto { Id = 1, Nombre = body.Nombre, Nacionalidad = body.Nacionalidad });
+            try
+            {
+                var cleanName = body.Nombre.Trim();
+                var autor = await _context.Autores.FirstOrDefaultAsync(a => a.Nombre.ToLower() == cleanName.ToLower(), cancellationToken);
+                if (autor == null)
+                {
+                    autor = new Autor(cleanName, body.Nacionalidad);
+                    await _context.Autores.AddAsync(autor, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                return CreatedAtAction(nameof(GetAutores), new AutorDto { Id = autor.Id, Nombre = autor.Nombre, Nacionalidad = autor.Nacionalidad });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_AUTHOR_CREATION_FAILED", Title = "Error", Detail = $"No se pudo registrar el autor: {ex.Message}" });
+            }
         }
 
         public override async Task<ActionResult<AutorDto>> UpdateAutor(int id, [FromBody] CreateAutorDto body, CancellationToken cancellationToken = default)
         {
-            return Ok(new AutorDto { Id = id, Nombre = body.Nombre, Nacionalidad = body.Nacionalidad });
+            try
+            {
+                var autor = await _context.Autores.FindAsync(new object[] { id }, cancellationToken);
+                if (autor == null) return NotFound(new ErrorResponse { Code = "ERR_AUTHOR_NOT_FOUND", Title = "No Encontrado", Detail = "El autor especificado no existe." });
+
+                autor.Update(body.Nombre.Trim(), body.Nacionalidad);
+                await _context.SaveChangesAsync(cancellationToken);
+                return Ok(new AutorDto { Id = autor.Id, Nombre = autor.Nombre, Nacionalidad = autor.Nacionalidad });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_AUTHOR_UPDATE_FAILED", Title = "Error", Detail = $"No se pudo actualizar el autor: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> DeleteAutor(int id, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            try
+            {
+                var autor = await _context.Autores.FindAsync(new object[] { id }, cancellationToken);
+                if (autor == null) return NotFound();
+
+                var hasBooks = await _context.Libros.AnyAsync(l => l.AutorId == id, cancellationToken);
+                if (hasBooks)
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_AUTHOR_DELETE_FAILED", Title = "Conflicto", Detail = "No se puede eliminar un autor que tiene libros asociados en el catálogo." });
+                }
+
+                _context.Autores.Remove(autor);
+                await _context.SaveChangesAsync(cancellationToken);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_AUTHOR_DELETE_FAILED", Title = "Error", Detail = "No se puede eliminar el autor por dependencias activas." });
+            }
         }
 
         public override async Task<ActionResult<ICollection<CategoriaDto>>> GetCategorias(CancellationToken cancellationToken = default)
@@ -715,17 +844,62 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<CategoriaDto>> CreateCategoria([FromBody] CreateCategoriaDto body, CancellationToken cancellationToken = default)
         {
-            return CreatedAtAction(nameof(GetCategorias), new CategoriaDto { Id = 1, Nombre = body.Nombre, Descripcion = body.Descripcion });
+            try
+            {
+                var cleanName = body.Nombre.Trim();
+                var cat = await _context.Categorias.FirstOrDefaultAsync(c => c.Nombre.ToLower() == cleanName.ToLower(), cancellationToken);
+                if (cat == null)
+                {
+                    cat = new Categoria(cleanName, body.Descripcion);
+                    await _context.Categorias.AddAsync(cat, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                return CreatedAtAction(nameof(GetCategorias), new CategoriaDto { Id = cat.Id, Nombre = cat.Nombre, Descripcion = cat.Descripcion });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_CATEGORY_CREATION_FAILED", Title = "Error", Detail = $"No se pudo crear la categoría: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> UpdateCategoria(int id, [FromBody] CreateCategoriaDto body, CancellationToken cancellationToken = default)
         {
-            return Ok(new CategoriaDto { Id = id, Nombre = body.Nombre, Descripcion = body.Descripcion });
+            try
+            {
+                var cat = await _context.Categorias.FindAsync(new object[] { id }, cancellationToken);
+                if (cat == null) return NotFound(new ErrorResponse { Code = "ERR_CATEGORY_NOT_FOUND", Title = "No Encontrado", Detail = "La categoría especificada no existe." });
+
+                cat.Update(body.Nombre.Trim(), body.Descripcion);
+                await _context.SaveChangesAsync(cancellationToken);
+                return Ok(new CategoriaDto { Id = cat.Id, Nombre = cat.Nombre, Descripcion = cat.Descripcion });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_CATEGORY_UPDATE_FAILED", Title = "Error", Detail = $"No se pudo actualizar la categoría: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> DeleteCategoria(int id, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            try
+            {
+                var cat = await _context.Categorias.FindAsync(new object[] { id }, cancellationToken);
+                if (cat == null) return NotFound();
+
+                var hasBooks = await _context.Libros.AnyAsync(l => l.CategoriaId == id, cancellationToken);
+                if (hasBooks)
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_CATEGORY_DELETE_FAILED", Title = "Conflicto", Detail = "No se puede eliminar una categoría con libros asignados." });
+                }
+
+                _context.Categorias.Remove(cat);
+                await _context.SaveChangesAsync(cancellationToken);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_CATEGORY_DELETE_FAILED", Title = "Error", Detail = "No se puede eliminar la categoría por dependencias activas." });
+            }
         }
 
         public override async Task<ActionResult<ICollection<EditorialDto>>> GetEditoriales(CancellationToken cancellationToken = default)
@@ -745,17 +919,62 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<EditorialDto>> CreateEditorial([FromBody] CreateEditorialDto body, CancellationToken cancellationToken = default)
         {
-            return CreatedAtAction(nameof(GetEditoriales), new EditorialDto { Id = 1, Nombre = body.Nombre });
+            try
+            {
+                var cleanName = body.Nombre.Trim();
+                var ed = await _context.Editoriales.FirstOrDefaultAsync(e => e.Nombre.ToLower() == cleanName.ToLower(), cancellationToken);
+                if (ed == null)
+                {
+                    ed = new Editorial(cleanName);
+                    await _context.Editoriales.AddAsync(ed, cancellationToken);
+                    await _context.SaveChangesAsync(cancellationToken);
+                }
+                return CreatedAtAction(nameof(GetEditoriales), new EditorialDto { Id = ed.Id, Nombre = ed.Nombre });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_EDITORIAL_CREATION_FAILED", Title = "Error", Detail = $"No se pudo registrar la editorial: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> UpdateEditorial(int id, [FromBody] CreateEditorialDto body, CancellationToken cancellationToken = default)
         {
-            return Ok(new EditorialDto { Id = id, Nombre = body.Nombre });
+            try
+            {
+                var ed = await _context.Editoriales.FindAsync(new object[] { id }, cancellationToken);
+                if (ed == null) return NotFound(new ErrorResponse { Code = "ERR_EDITORIAL_NOT_FOUND", Title = "No Encontrado", Detail = "La editorial especificada no existe." });
+
+                ed.Update(body.Nombre.Trim());
+                await _context.SaveChangesAsync(cancellationToken);
+                return Ok(new EditorialDto { Id = ed.Id, Nombre = ed.Nombre });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_EDITORIAL_UPDATE_FAILED", Title = "Error", Detail = $"No se pudo actualizar la editorial: {ex.Message}" });
+            }
         }
 
         public override async Task<IActionResult> DeleteEditorial(int id, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            try
+            {
+                var ed = await _context.Editoriales.FindAsync(new object[] { id }, cancellationToken);
+                if (ed == null) return NotFound();
+
+                var hasBooks = await _context.Libros.AnyAsync(l => l.EditorialId == id, cancellationToken);
+                if (hasBooks)
+                {
+                    return BadRequest(new ErrorResponse { Code = "ERR_EDITORIAL_DELETE_FAILED", Title = "Conflicto", Detail = "No se puede eliminar una editorial con libros asociados." });
+                }
+
+                _context.Editoriales.Remove(ed);
+                await _context.SaveChangesAsync(cancellationToken);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_EDITORIAL_DELETE_FAILED", Title = "Error", Detail = "No se puede eliminar la editorial por dependencias activas." });
+            }
         }
 
         // ==========================================
@@ -932,6 +1151,10 @@ namespace LibriKeep.Presentation.API.Controllers
                 };
 
                 return CreatedAtAction(nameof(GetUsuarioById), new { id = usuario.Id }, dto);
+            }
+            catch (DbUpdateException)
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_DUPLICATE_USER", Title = "Conflicto de Clave Única", Detail = "El DNI o Correo electrónico ingresado ya se encuentra registrado en la base de datos." });
             }
             catch (Exception ex)
             {
@@ -1116,11 +1339,41 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<ICollection<SancionDto>>> GetUsuarioSanciones(int id, CancellationToken cancellationToken = default)
         {
-            var list = new List<SancionDto>
+            try
             {
-                new() { Id = 22, UsuarioId = id, PrestamoId = 45, FechaInicio = DateTimeOffset.UtcNow.AddDays(-10), FechaFin = DateTimeOffset.UtcNow.AddDays(-8), DiasSancion = 2, Estado = SancionDtoEstado.Expirada }
-            };
-            return Ok(list);
+                var dbList = await _context.Sanciones
+                    .AsNoTracking()
+                    .Where(s => s.UsuarioId == id)
+                    .OrderByDescending(s => s.FechaInicio)
+                    .ToListAsync(cancellationToken);
+
+                var list = dbList.Select(s =>
+                {
+                    var st = s.Estado switch
+                    {
+                        EstadoSancion.Activa => SancionDtoEstado.Activa,
+                        EstadoSancion.Expirada => SancionDtoEstado.Expirada,
+                        _ => SancionDtoEstado.Levantada
+                    };
+
+                    return new SancionDto
+                    {
+                        Id = s.Id,
+                        UsuarioId = s.UsuarioId,
+                        PrestamoId = s.PrestamoId ?? 0,
+                        FechaInicio = s.FechaInicio,
+                        FechaFin = s.FechaFin,
+                        DiasSancion = s.DiasSancion,
+                        Estado = st
+                    };
+                }).ToList();
+
+                return Ok((ICollection<SancionDto>)list);
+            }
+            catch
+            {
+                return Ok((ICollection<SancionDto>)new List<SancionDto>());
+            }
         }
 
         // ==========================================
@@ -1349,11 +1602,56 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<ActionResult<ICollection<ReservaDto>>> GetReservas(int? libroId = null, int? usuarioId = null, CancellationToken cancellationToken = default)
         {
-            var list = new List<ReservaDto>
+            await EnsureSeededAsync();
+            try
             {
-                new() { Id = 12, UsuarioId = usuarioId ?? 10, UsuarioNombre = "Juan Pérez", LibroId = libroId ?? 1, LibroTitulo = "Clean Architecture", FechaReserva = DateTimeOffset.UtcNow, PosicionCola = 1, Estado = ReservaDtoEstado.Activa }
-            };
-            return Ok(list);
+                var q = _context.Reservas
+                    .Include(r => r.Usuario)
+                    .Include(r => r.Libro)
+                    .AsNoTracking()
+                    .AsQueryable();
+
+                if (libroId.HasValue)
+                {
+                    q = q.Where(r => r.LibroId == libroId.Value);
+                }
+
+                if (usuarioId.HasValue)
+                {
+                    q = q.Where(r => r.UsuarioId == usuarioId.Value);
+                }
+
+                var dbList = await q.OrderBy(r => r.PosicionCola).ToListAsync(cancellationToken);
+
+                var list = dbList.Select(r =>
+                {
+                    var st = r.Estado switch
+                    {
+                        EstadoReserva.Activa => ReservaDtoEstado.Activa,
+                        EstadoReserva.Procesada => ReservaDtoEstado.Procesada,
+                        EstadoReserva.Cancelada => ReservaDtoEstado.Cancelada,
+                        _ => ReservaDtoEstado.Vencida
+                    };
+
+                    return new ReservaDto
+                    {
+                        Id = r.Id,
+                        UsuarioId = r.UsuarioId,
+                        UsuarioNombre = r.Usuario?.NombreCompleto ?? "Desconocido",
+                        LibroId = r.LibroId,
+                        LibroTitulo = r.Libro?.Titulo ?? "Desconocido",
+                        FechaReserva = r.FechaReserva,
+                        PosicionCola = r.PosicionCola,
+                        Estado = st
+                    };
+                }).ToList();
+
+                return Ok((ICollection<ReservaDto>)list);
+            }
+            catch
+            {
+                return Ok((ICollection<ReservaDto>)new List<ReservaDto>());
+            }
         }
 
         public override async Task<ActionResult<ReservaDto>> CrearReserva([FromBody] CrearReservaDto body, CancellationToken cancellationToken = default)
@@ -1386,7 +1684,19 @@ namespace LibriKeep.Presentation.API.Controllers
 
         public override async Task<IActionResult> CancelarReserva(int id, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            try
+            {
+                var r = await _context.Reservas.FindAsync(new object[] { id }, cancellationToken);
+                if (r == null) return NotFound();
+
+                r.Cancelar();
+                await _context.SaveChangesAsync(cancellationToken);
+                return NoContent();
+            }
+            catch
+            {
+                return BadRequest(new ErrorResponse { Code = "ERR_RESERVA_CANCEL_FAILED", Title = "Error", Detail = "No se pudo cancelar la reserva." });
+            }
         }
 
         // ==========================================

@@ -30,7 +30,9 @@ namespace LibriKeep.Core.Application.Common.Interfaces
     public interface ILibroRepository
     {
         Task<Libro?> GetByIdAsync(int id, CancellationToken cancellationToken = default);
+        Task<Libro?> GetByIsbnAsync(string isbn, CancellationToken cancellationToken = default);
         Task<bool> AnyAsync(int id, CancellationToken cancellationToken = default);
+        Task AddAsync(Libro libro, CancellationToken cancellationToken = default);
     }
 
     public interface ISancionRepository
