@@ -75,14 +75,14 @@ test.describe('Módulo de Autenticación Exhaustivo - LibriKeep Pro', () => {
 
         // 3. Validar banner de éxito y redirección a OPAC
         await expect(page.locator('text=Sesión cerrada correctamente')).toBeVisible();
-        await expect(page.locator('h2:has-text("Catálogo de Biblioteca OPAC")')).toBeVisible();
+        await expect(page.locator('h2:has-text("BIBLIOTECA")')).toBeVisible();
         await expect(logoutButton).not.toBeVisible();
 
         // 4. Recargar la página para simular que no persiste la sesión en almacenamiento
         await page.reload();
 
         // 5. Verificar que seguimos desautenticados en el catálogo OPAC y no volvemos a la vista privada
-        await expect(page.locator('h2:has-text("Catálogo de Biblioteca OPAC")')).toBeVisible();
+        await expect(page.locator('h2:has-text("BIBLIOTECA")')).toBeVisible();
         await expect(page.locator('h2:has-text("Panel de Reportes Estadísticos")')).not.toBeVisible();
         await expect(page.locator('nav button:has-text("Iniciar Sesión")')).toBeVisible();
     });

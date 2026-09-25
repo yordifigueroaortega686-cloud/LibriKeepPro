@@ -12,7 +12,7 @@ test.describe('Protección de Middleware/Enrutador - LibriKeep Pro', () => {
         await page.goto('/dashboard');
 
         // 2. Verificar que se deniega el acceso mostrando el catálogo público OPAC
-        await expect(page.locator('h2:has-text("Catálogo de Biblioteca OPAC")')).toBeVisible();
+        await expect(page.locator('h2:has-text("BIBLIOTECA")')).toBeVisible();
 
         // 3. Verificar que el panel de administración no se encuentra renderizado
         await expect(page.locator('h2:has-text("Panel de Reportes Estadísticos")')).not.toBeVisible();
@@ -23,7 +23,7 @@ test.describe('Protección de Middleware/Enrutador - LibriKeep Pro', () => {
         await page.goto('/libros');
 
         // 2. Verificar que se deniega el acceso mostrando el catálogo público OPAC
-        await expect(page.locator('h2:has-text("Catálogo de Biblioteca OPAC")')).toBeVisible();
+        await expect(page.locator('h2:has-text("BIBLIOTECA")')).toBeVisible();
 
         // 3. Verificar que el formulario de catalogación no está visible
         await expect(page.locator('h2:has-text("Ingesta y Catalogación Avanzada")')).not.toBeVisible();
@@ -34,7 +34,7 @@ test.describe('Protección de Middleware/Enrutador - LibriKeep Pro', () => {
         await page.goto('/prestamos');
 
         // 2. Verificar que se deniega el acceso mostrando el catálogo público OPAC
-        await expect(page.locator('h2:has-text("Catálogo de Biblioteca OPAC")')).toBeVisible();
+        await expect(page.locator('h2:has-text("BIBLIOTECA")')).toBeVisible();
 
         // 3. Verificar que el panel de préstamos no está visible
         await expect(page.locator('h2:has-text("Registrar Nuevo Préstamo")')).not.toBeVisible();

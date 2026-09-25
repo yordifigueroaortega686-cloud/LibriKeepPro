@@ -41,3 +41,42 @@ Está estrictamente prohibido emitir mensajes de error genéricos del tipo "Ocur
 
 ### Validación Previa Incondicional
 Ninguna petición que mute la información de la base de datos (creación, edición o eliminación) puede ser procesada por los manejadores de negocio si no ha superado previamente un filtro de esquema y validez defensiva. Toda solicitud se valida de manera obligatoria en la capa de Aplicación mediante reglas explícitas de formato (como la longitud permitida de caracteres, el tipo de dato recibido y patrones numéricos). Las reglas de persistencia, como la unicidad del ISBN en obras o del código de barras en copias físicas, se comprueban inmediatamente en los repositorios de datos antes de confirmar cualquier guardado, previniendo la corrupción de la base de datos.
+
+## ⚙️ Principio VIII: Arquitectura de Escalamiento, Resiliencia y Eficiencia de Costos
+
+Este principio establece las restricciones de diseño arquitectónico que garantizan la escalabilidad horizontal, la tolerancia a fallas y la viabilidad económica del sistema en entornos de producción real.
+
+### Regla VIII-1: Desacoplamiento de Multimedia vía CDN y Object Storage
+
+La capa de aplicación web **nunca** servirá activos binarios pesados ni contenido multimedia de forma directa desde los servidores de aplicación. Todo archivo estático —portadas de obras, documentos adjuntos, recursos audiovisuales— se almacena obligatoriamente en **Cloudflare R2** (almacenamiento de objetos compatible con la API de S3) y se distribuye globalmente a través de la red de distribución de contenido **Cloudflare CDN**. Esta regla es inviolable: su incumplimiento degrada el rendimiento de la API REST y compromete la capacidad de escalar horizontalmente.
+
+### Regla VIII-2: Capa Web Sin Estado (Stateless)
+
+Todas las instancias del servidor de aplicación en **.NET 10** deben operar en modo completamente apátrida. Está prohibido almacenar estado de sesión de usuario, tokens de autenticación o datos de contexto en la memoria local de proceso (in-process). Cualquier estado compartido entre réplicas —incluyendo tokens de sesión JWT, preferencias de operador y marcadores de operaciones en curso— debe residir de forma exclusiva en **Redis externo**. Esta restricción es el prerrequisito arquitectónico que habilita el escalamiento horizontal mediante la adición de instancias adicionales detrás del balanceador de carga sin coordinación entre nodos.
+
+### Regla VIII-3: Estrategia de Caché Cache-Aside con TTL de 60 Segundos
+
+Las consultas de lectura pública de alta frecuencia —catálogo bibliográfico, detalle de obras, disponibilidad de ejemplares— implementan obligatoriamente el patrón **Cache-Aside** sobre Redis con un tiempo de vida (TTL) de **60 segundos**. El flujo de lectura es el siguiente: la aplicación consulta Redis primero; si existe la entrada (cache hit), la retorna directamente sin tocar la base de datos; si no existe (cache miss), consulta PostgreSQL, almacena el resultado en Redis con el TTL establecido y retorna la respuesta al cliente.
+
+Ante una caída total del servicio de caché, se aplica obligatoriamente la estrategia **Single-Flight / Mutex** para evitar el efecto avalancha (cache stampede): únicamente una solicitud concurrente por clave puede consultar la base de datos simultáneamente; las restantes aguardan y reutilizan el resultado de la primera consulta resuelta.
+
+### Regla VIII-4: Persistencia con Separación de Lecturas y Escrituras
+
+El sistema emplea un modelo de persistencia híbrida con separación explícita de nodos:
+
+- **Nodo Primario de PostgreSQL:** Receptor exclusivo de todas las operaciones de mutación (INSERT, UPDATE, DELETE) y de las lecturas del **autor del cambio** (operador catalogador que acaba de confirmar una transacción). Esta regla garantiza consistencia de lectura inmediata (read-your-own-writes) para el operador que genera el cambio, eliminando sorpresas de datos obsoletos.
+- **Réplicas de Lectura de PostgreSQL:** Destino de todas las consultas del catálogo público con tolerancia a consistencia eventual. Estas réplicas absorben el volumen masivo de lecturas de usuarios finales, protegiendo al nodo primario de la carga de consultas de solo lectura.
+
+### Regla VIII-5: Viabilidad de Despliegue en Capa Gratuita ($0 USD)
+
+El sistema debe ser íntegramente desplegable con un presupuesto de **$0.00 USD/mes** utilizando exclusivamente las capas gratuitas de los siguientes proveedores certificados para LibriKeep Pro:
+
+| Componente | Proveedor Certificado | Capa Gratuita |
+|---|---|---|
+| Frontend (Next.js/React) | Vercel | Hobby Plan |
+| Backend API (.NET 10) | Render o Fly.io | Free Tier |
+| Base de datos PostgreSQL | Neon Postgres | Free Tier (0.5 GB) |
+| Caché Redis | Upstash Redis | Free Tier (10,000 cmd/día) |
+| CDN y Object Storage | Cloudflare R2 / CDN | Free Tier (10 GB/mes) |
+
+Ninguna decisión de diseño o de selección de proveedor puede imponer un costo recurrente que impida el despliegue completo del sistema dentro de este presupuesto, salvo decisión explícita y documentada del equipo de arquitectura.

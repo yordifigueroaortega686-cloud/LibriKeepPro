@@ -11,7 +11,7 @@ test.describe('Control de Accesos y Seguridad - LibriKeep Pro', () => {
         await page.goto('/dashboard');
 
         // 2. Verificar que se muestra la interfaz del catálogo OPAC (vista pública por defecto)
-        const opacHeader = page.locator('h2:has-text("Catálogo de Biblioteca OPAC")');
+        const opacHeader = page.locator('h2:has-text("BIBLIOTECA")');
         await expect(opacHeader).toBeVisible();
 
         // 3. Confirmar que el panel de administración NO está visible

@@ -2,6 +2,7 @@
   <Folder Name="/src/">
     <Project Path="src/LibriKeep.Core.Application/LibriKeep.Core.Application.csproj" />
     <Project Path="src/LibriKeep.Core.Domain/LibriKeep.Core.Domain.csproj" />
+    <Project Path="src/LibriKeep.Infrastructure.Cache/LibriKeep.Infrastructure.Cache.csproj" />
     <Project Path="src/LibriKeep.Infrastructure.Persistence/LibriKeep.Infrastructure.Persistence.csproj" />
     <Project Path="src/LibriKeep.Presentation.API/LibriKeep.Presentation.API.csproj" />
   </Folder>

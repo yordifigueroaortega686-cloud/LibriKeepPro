@@ -1,6 +1,10 @@
 using LibriKeep.Presentation.API.Middleware;
 using LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo;
 using LibriKeep.Infrastructure.Persistence;
+using LibriKeep.Infrastructure.Cache;
+using LibriKeep.Infrastructure.Cache.Decorators;
+using LibriKeep.Core.Application.Common.Interfaces;
+using LibriKeep.Infrastructure.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +15,26 @@ builder.Services.AddControllers()
         options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
     });
 
-// Registrar capa de infraestructura y persistencia (PostgreSQL / In-Memory Db fallback)
+// Registrar capa de infraestructura y persistencia (PostgreSQL primario + réplica de lectura)
+// Regla VIII-4: separación de nodos primario (escrituras) / réplica (catálogo público)
 builder.Services.AddInfrastructurePersistence(builder.Configuration);
+
+// Registrar infraestructura de caché distribuida (Redis / NullCacheService)
+// Regla VIII-3: Cache-Aside con TTL 60 s + Single-Flight / Mutex
+builder.Services.AddInfrastructureCache(builder.Configuration);
+
+// Registrar el Decorador de caché sobre ILibroRepository
+// El CachedLibroRepository envuelve al LibroRepository concreto:
+//   - Lecturas públicas: Cache-Aside sobre Redis (TTL 60 s, Single-Flight)
+//   - Escrituras: nodo primario + invalidación de caché
+//   - AnyAsync: siempre al primario (consistencia fuerte pre-escritura)
+builder.Services.AddScoped<ILibroRepository>(sp =>
+{
+    var innerRepo = sp.GetRequiredService<LibroRepository>();
+    var cache     = sp.GetRequiredService<ICacheService>();
+    var logger    = sp.GetRequiredService<Microsoft.Extensions.Logging.ILogger<CachedLibroRepository>>();
+    return new CachedLibroRepository(innerRepo, cache, logger);
+});
 
 // Registrar MediatR apilado en la capa de Aplicación
 builder.Services.AddMediatR(cfg => 
@@ -72,3 +94,4 @@ app.MapControllers();
 app.Run();
 
 public partial class Program { }
+

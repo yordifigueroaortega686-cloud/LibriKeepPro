@@ -19,6 +19,7 @@
   <ItemGroup>
     <ProjectReference Include="..\LibriKeep.Infrastructure.Persistence\LibriKeep.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\LibriKeep.Core.Application\LibriKeep.Core.Application.csproj" />
+    <ProjectReference Include="..\LibriKeep.Infrastructure.Cache\LibriKeep.Infrastructure.Cache.csproj" />
   </ItemGroup>
 
 </Project>

@@ -389,7 +389,7 @@ function OpacScreen({ setGlobalError }: { setGlobalError: any }) {
   return (
     <div className="space-y-6">
       <div className="text-center max-w-2xl mx-auto space-y-3">
-        <h2 className="text-2xl font-black md:text-3xl tracking-tight text-textOnBg">Catálogo de Biblioteca OPAC</h2>
+        <h2 className="text-2xl font-black md:text-3xl tracking-tight text-textOnBg">BIBLIOTECA</h2>
         <p className="text-textOnBg/80 text-sm">Explora las obras de ingeniería y literatura general de LibriKeep en tiempo real con disponibilidad de existencias físicas.</p>
       </div>
 
