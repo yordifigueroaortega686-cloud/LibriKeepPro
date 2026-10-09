@@ -9,6 +9,7 @@ using MediatR;
 using LibriKeep.Core.Application.Circulacion.Commands.RegistrarPrestamo;
 using LibriKeep.Core.Application.Circulacion.Commands.ProcesarDevolucion;
 using LibriKeep.Core.Application.Circulacion.Commands.CrearReserva;
+using LibriKeep.Core.Application.Common.Interfaces;
 using LibriKeep.Core.Domain.Entities;
 using LibriKeep.Core.Domain.Enums;
 using LibriKeep.Infrastructure.Persistence.Context;
@@ -20,11 +21,13 @@ namespace LibriKeep.Presentation.API.Controllers
     {
         private readonly IMediator _mediator;
         private readonly LibriKeepDbContext _context;
+        private readonly ILibroRepository _libroRepository;
 
-        public LibriKeepApiController(IMediator mediator, LibriKeepDbContext context)
+        public LibriKeepApiController(IMediator mediator, LibriKeepDbContext context, ILibroRepository libroRepository)
         {
             _mediator = mediator;
             _context = context;
+            _libroRepository = libroRepository;
         }
 
         private async Task EnsureSeededAsync()
@@ -34,6 +37,42 @@ namespace LibriKeep.Presentation.API.Controllers
                 await _context.Database.EnsureCreatedAsync();
             }
             catch { }
+
+            if (!await _context.Libros.AnyAsync(l => l.Titulo == "Cien Años de Soledad"))
+            {
+                var autorGGM = await _context.Autores.FirstOrDefaultAsync(a => a.Nombre == "Gabriel García Márquez");
+                if (autorGGM == null)
+                {
+                    autorGGM = new Autor("Gabriel García Márquez", "Colombiana");
+                    await _context.Autores.AddAsync(autorGGM);
+                    await _context.SaveChangesAsync();
+                }
+
+                var catNovela = await _context.Categorias.FirstOrDefaultAsync(c => c.Nombre == "Novela" || c.Nombre == "Literatura");
+                if (catNovela == null)
+                {
+                    catNovela = new Categoria("Novela", "Narrativa hispanoamericana y ficción clásica");
+                    await _context.Categorias.AddAsync(catNovela);
+                    await _context.SaveChangesAsync();
+                }
+
+                var edSud = await _context.Editoriales.FirstOrDefaultAsync(e => e.Nombre == "Editorial Sudamericana" || e.Nombre == "Sudamericana");
+                if (edSud == null)
+                {
+                    edSud = new Editorial("Editorial Sudamericana");
+                    await _context.Editoriales.AddAsync(edSud);
+                    await _context.SaveChangesAsync();
+                }
+
+                var libro3 = new Libro("Cien Años de Soledad", "9780307474728", autorGGM.Id, catNovela.Id, edSud.Id, new DateTime(1967, 5, 30, 0, 0, 0, DateTimeKind.Utc), "Español", "Colombia", TipoMaterial.LibroFisico);
+                await _context.Libros.AddAsync(libro3);
+                await _context.SaveChangesAsync();
+
+                var ej5 = new Ejemplar(libro3.Id, "9780307474728-C1", "Estante C1", "Buen estado");
+                var ej6 = new Ejemplar(libro3.Id, "9780307474728-C2", "Estante C1", "Buen estado");
+                await _context.Ejemplares.AddRangeAsync(ej5, ej6);
+                await _context.SaveChangesAsync();
+            }
 
             if (await _context.Autores.AnyAsync()) return;
 
@@ -263,13 +302,7 @@ namespace LibriKeep.Presentation.API.Controllers
             await EnsureSeededAsync();
             try
             {
-                var libro = await _context.Libros
-                    .Include(l => l.Autor)
-                    .Include(l => l.Categoria)
-                    .Include(l => l.Editorial)
-                    .Include(l => l.Ejemplares)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+                var libro = await _libroRepository.GetByIdAsync(id, cancellationToken);
 
                 if (libro == null)
                 {
@@ -488,13 +521,7 @@ namespace LibriKeep.Presentation.API.Controllers
             await EnsureSeededAsync();
             try
             {
-                var libro = await _context.Libros
-                    .Include(l => l.Autor)
-                    .Include(l => l.Categoria)
-                    .Include(l => l.Editorial)
-                    .Include(l => l.Ejemplares)
-                    .AsNoTracking()
-                    .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);
+                var libro = await _libroRepository.GetByIdAsync(id, cancellationToken);
 
                 if (libro == null)
                 {

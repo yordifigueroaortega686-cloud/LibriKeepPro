@@ -134,6 +134,9 @@ namespace LibriKeep.Infrastructure.Persistence.Repositories
         public async Task<Libro?> GetByIdAsync(int id, CancellationToken cancellationToken = default)
         {
             return await _context.Libros
+                .Include(l => l.Autor)
+                .Include(l => l.Categoria)
+                .Include(l => l.Editorial)
                 .Include(l => l.Ejemplares)
                 .Include(l => l.Reservas)
                 .FirstOrDefaultAsync(l => l.Id == id, cancellationToken);

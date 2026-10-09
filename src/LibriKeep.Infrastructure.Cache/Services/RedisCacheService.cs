@@ -41,7 +41,8 @@ namespace LibriKeep.Infrastructure.Cache.Services
             _jsonOptions = new JsonSerializerOptions
             {
                 PropertyNameCaseInsensitive = true,
-                WriteIndented = false
+                WriteIndented = false,
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles
             };
         }
 
@@ -50,9 +51,15 @@ namespace LibriKeep.Infrastructure.Cache.Services
         {
             try
             {
+                _logger.LogInformation("[Caché] Intentando leer clave '{Key}' desde Redis.", key);
                 var raw = await _db.StringGetAsync(key);
-                if (!raw.HasValue) return null;
+                if (!raw.HasValue)
+                {
+                    _logger.LogInformation("[Caché] Cache MISS para clave '{Key}'.", key);
+                    return null;
+                }
 
+                _logger.LogInformation("[Caché] Cache HIT para clave '{Key}'.", key);
                 return JsonSerializer.Deserialize<T>((string)raw!, _jsonOptions);
             }
             catch (RedisException ex)
@@ -67,8 +74,10 @@ namespace LibriKeep.Infrastructure.Cache.Services
         {
             try
             {
+                _logger.LogInformation("[Caché] Guardando clave '{Key}' en Redis con TTL={Ttl}s.", key, ttl.TotalSeconds);
                 var payload = JsonSerializer.Serialize(value, _jsonOptions);
                 await _db.StringSetAsync(key, payload, ttl);
+                _logger.LogInformation("[Caché] Clave '{Key}' guardada exitosamente en Redis.", key);
             }
             catch (RedisException ex)
             {

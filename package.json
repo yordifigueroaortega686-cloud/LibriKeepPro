@@ -1,0 +1,12 @@
+{
+  "name": "librikeep-root",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  },
+  "scripts": {
+    "test:e2e": "playwright test",
+    "test:e2e:report": "playwright show-report"
+  }
+}

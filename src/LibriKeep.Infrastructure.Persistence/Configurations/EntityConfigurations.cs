@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using LibriKeep.Core.Domain.Entities;
 using LibriKeep.Core.Domain.Enums;
 
@@ -79,8 +80,19 @@ namespace LibriKeep.Infrastructure.Persistence.Configurations
             builder.Property(l => l.Idioma).HasMaxLength(50);
             builder.Property(l => l.Pais).HasMaxLength(100);
             
+            // Conversor personalizado para manejar el valor heredado 'Libro'
+            // que existe en la BD pero no coincide con ningún miembro del enum TipoMaterial.
+            var tipoMaterialConverter = new ValueConverter<TipoMaterial, string>(
+                v => v.ToString(),
+                v => v == "Libro" ? TipoMaterial.LibroFisico
+                   : v == "LibroFisico" ? TipoMaterial.LibroFisico
+                   : v == "LibroDigital" ? TipoMaterial.LibroDigital
+                   : v == "Revista" ? TipoMaterial.Revista
+                   : v == "Tesis" ? TipoMaterial.Tesis
+                   : TipoMaterial.Otro);
+
             builder.Property(l => l.TipoMaterial)
-                   .HasConversion<string>()
+                   .HasConversion(tipoMaterialConverter)
                    .HasMaxLength(50)
                    .IsRequired();
 
